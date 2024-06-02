@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job App List
+{% endblock %}
+
+{% block content %}
+
+<div class="container m-2">
+    <h1 class="display-6 ms-2">Jobs Applied for</h1>
+
+    <div class="container p-2">
+        {% for jobapp in jobapps %}
+        <div class="row p-1">
+        <div class="col-1">
+            <button type="button" class="btn btn-sm btn-outline-primary">View</button>
+        </div>
+            <div class="jobapp col-1">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</div>
+
+            <div class="jobapp col">
+        <a href="{% url 'jobapp' slug=jobapp.slug %}">
+            {{ jobapp.title }}
+        </a>
+    </div>
+            <div class="jobapp col">{{ jobapp.company }}</div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
