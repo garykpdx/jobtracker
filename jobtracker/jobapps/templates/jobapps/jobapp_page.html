@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Tracker - {{ jobapp.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm">
+    <div class="row">
+        <div class="col">
+            {{ jobapp.title }}
+        </div>
+        <div class="col">
+            {{ jobapp.company }}
+        </div>
+        <div class="col-3">
+            {{ jobapp.applied_dt }}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
