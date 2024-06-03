@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Tracker - {{ jobapp.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm">
+    <form action="{% url new-job %}  " method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button class="form-submit">Add Job App</button>
+    </form>
+
+</div>
+
+{% endblock %}
