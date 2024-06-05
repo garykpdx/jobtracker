@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set work directory
-WORKDIR /jobtracker
+WORKDIR /jobtracker/jobtracker
 
 # Install dependencies
 COPY requirements.txt .
@@ -24,5 +24,4 @@ RUN mkdir -p static
 EXPOSE 8000
 
 # Run the Django application
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["pwd"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
