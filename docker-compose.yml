@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: jobtracker
+      POSTGRES_USER: jobtrackeruser
+      POSTGRES_PASSWORD: jobtrackerpassword
+
+  web:
+    build: .
+    volumes:
+      - .:/jobtracker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_NAME=jobtracker
+      - DATABASE_USER=jobtrackeruser
+      - DATABASE_PASSWORD=jobtrackerpassword
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+
+volumes:
+  postgres_data:
