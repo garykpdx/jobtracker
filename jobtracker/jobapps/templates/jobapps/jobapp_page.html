@@ -1,20 +1,62 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Job Tracker - {{ jobapp.title }}
+Job Tracker - {{ jobapp.company }}
 {% endblock %}
 
 {% block content %}
 <div class="container-sm">
-    <div class="row">
+    <div class="row mb-1 text-align-start">
         <div class="col">
-            {{ jobapp.title }}
+            <p class="h4 bg-primary text-light">Title</p>
         </div>
         <div class="col">
-            {{ jobapp.company }}
+            <p class="h4 bg-primary text-light">Company</p>
         </div>
         <div class="col-3">
-            {{ jobapp.applied_dt }}
+            <p class="h4 bg-primary text-light">Date</p>
+        </div>
+    </div>
+    <div class="row mb-4 text-align-start">
+        <div class="col text-start">
+            {{ jobapp.title }}
+        </div>
+        <div class="col text-start">
+            {{ jobapp.company }}
+        </div>
+        <div class="col-3 text-start">
+            {{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-3 my-2 text-start">
+            <p class="h4 bg-primary text-light">City / State</p>
+        </div>
+        <div class="col-2 my-2 text-start">
+            <p class="h4 bg-primary text-light">Job Number</p>
+        </div>
+        <div class="col-3 my-2 text-start">
+            <p class="h4 bg-primary text-light">Location</p>
+        </div>
+    </div>
+    <div class="row mb-4 text-align-start">
+        <div class="col-2 text-start">
+            {{ jobapp.city }}
+        </div>
+        <div class="col-1 text-start">
+            {{ jobapp.state }}
+        </div>
+        <div class="col-2 text-start">
+            {{ jobapp.job_number }}
+        </div>
+        <div class="col-3 text-start">
+            {{ jobapp.location_type }}
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col">
+            <p class="h4 bg-primary text-light">Description</p>
+        {{ jobapp.description }}
         </div>
     </div>
 
