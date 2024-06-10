@@ -5,5 +5,14 @@ Register User
 {% endblock %}
 
 {% block content %}
-<h1>Register User</h1>
+<div class="container m-2">
+    <h1>Register User</h1>
+    <form action="/users/register/" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <div class="container mt-2">
+            <button>Submit</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
