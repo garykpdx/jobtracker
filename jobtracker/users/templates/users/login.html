@@ -1,18 +1,33 @@
 {% extends 'layout.html' %}
-
+{% load static %}
 {% block title %}
 User Login
 {% endblock %}
 
 {% block content %}
 <div class="container text-bg-primary p-3 rounded-5">
-    <h1>User Login</h1>
-    <form action="/users/login/" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <div class="container mt-2">
-            <button>Submit</button>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col mb-4">
+                <h1>User Login</h1>
+            </div>
         </div>
-    </form>
+<!--        <div class="row align-items-start mb-2">-->
+<!--            <div class="col">-->
+<!--                <img src="{% static 'images/hr_lizard.jpeg' %}"/>-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="row align-items-start mb-2">
+            <div class="col">
+                <form action="/users/login/" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div class="container mt-4">
+                        <button>Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
