@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from .models import JobApp
+
 
 # Create your views here.
 def jobapp_list(request):
@@ -14,5 +16,6 @@ def jobapp_page(request, slug):
     return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp})
 
 
+@login_required(login_url="/users/login/")
 def new_jobapp(request):
-    return HttpResponse("New job app")
+    return render(request, 'jobapps/new_jobapp.html')

@@ -14,7 +14,7 @@ User Login
         </div>
         <div class="row align-items-start mb-2">
             <div class="col">
-<!--                <img src="{% static 'images/hr_lizard.jpeg' %}"/>-->
+                <!--                <img src="{% static 'images/hr_lizard.jpeg' %}"/>-->
                 <img src="images/hr_lizard.jpeg"/>
             </div>
         </div>
@@ -23,6 +23,9 @@ User Login
                 <form action="/users/login/" method="post">
                     {% csrf_token %}
                     {{ form }}
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+                    {% endif %}
                     <div class="container mt-4">
                         <button>Submit</button>
                     </div>
