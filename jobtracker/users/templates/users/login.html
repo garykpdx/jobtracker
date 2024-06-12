@@ -20,7 +20,7 @@ User Login
         </div>
         <div class="row align-items-start mb-2">
             <div class="col">
-                <form action="/users/login/" method="post">
+                <form action="{% url 'users:login' %}" method="post">
                     {% csrf_token %}
                     {{ form }}
                     {% if request.GET.next %}
