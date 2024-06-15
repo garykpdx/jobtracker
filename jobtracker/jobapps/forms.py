@@ -17,4 +17,5 @@ class CreateJobapp(forms.ModelForm):
             "contractor_name",
             "job_url",
             "job_source",
+            "slug",
         ]
