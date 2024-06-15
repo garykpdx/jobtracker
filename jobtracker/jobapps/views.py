@@ -28,6 +28,9 @@ def new_jobapp(request):
         form = forms.CreateJobapp(request.POST)
         if form.is_valid():
             # save with user
+            jobapp = form.save(commit=False)
+            jobapp.user = request.user
+            jobapp.save()
             return redirect("jobapps")
     else:
         form = forms.CreateJobapp()

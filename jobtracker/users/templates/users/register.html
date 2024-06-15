@@ -7,7 +7,7 @@ Register User
 {% block content %}
 <div class="container text-bg-primary p-3 rounded-5">
     <h1>Register User</h1>
-    <form action="/users/register/" method="post">
+    <form action="{% url 'users:register' %}" method="post">
         {% csrf_token %}
         {{ form }}
         <div class="container mt-2">
