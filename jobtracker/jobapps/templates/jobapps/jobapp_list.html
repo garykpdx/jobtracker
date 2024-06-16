@@ -11,9 +11,6 @@ Job App List
 
     <div class="container p-2">
         <div class="row p-1">
-            <div class="col-1 text-start">
-
-            </div>
             <div class="jobapp col-1 text-start">
                 <p class="h4 bg-primary text-light">Date</p>
             </div>
@@ -37,9 +34,6 @@ Job App List
 
         {% for jobapp in jobapps %}
         <div class="row p-1">
-            <div class="col-1 text-start">
-                <button type="button" class="btn btn-sm btn-outline-primary">View</button>
-            </div>
             <div class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</div>
 
             <div class="jobapp col text-start">
