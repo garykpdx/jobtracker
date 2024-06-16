@@ -6,10 +6,10 @@ class CreateJobapp(forms.ModelForm):
     class Meta:
         model = models.JobApp
         fields = [
+            "company",
             "title",
             "description",
             "job_number",
-            "company",
             "city",
             "state",
             "payrate",
