@@ -7,25 +7,21 @@ Job Tracker
 {% block content %}
 <div class="container m-2">
     <p class="h4 bg-primary text-light">Job Statistics</p>
-<p>Total jobs applied for: {{ jobcount }}</p>
+    <p><b>Total jobs applied for:</b> {{ jobcount }}</p>
 </div>
 
 <div class="container m-2">
     <p class="h4 bg-primary text-light">Count By Date</p>
     <div class="row p-1">
-            <div class="jobapp col-2 text-start">
-                Applied Date
-            </div>
-            <div class="jobapp col-2 text-start">
-                Number of jobs
-            </div>
+            <div class="jobapp col-2 text-start"><b>Date</b></div>
+            <div class="jobapp col-2 text-start"><b>Number of jobs</b></div>
     {% for count in daily_counts %}
         <div class="row p-1">
             <div class="jobapp col-2 text-start">
                 {{ count.applied_dt|date:"SHORT_DATE_FORMAT" }}
             </div>
-            <div class="jobapp col-2 text-start">
-                {{ count.applied_dt__count }}
+            <div class="jobapp col-1 text-start">
+                {{ count.date_count }}
             </div>
         </div>
     {% endfor %}
