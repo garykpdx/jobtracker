@@ -17,8 +17,8 @@ def jobapp_list(request):
 
 # should convert with int converter for using with job_id unique ID: <int:job_id>
 @login_required(login_url="/users/login/")
-def jobapp_page(request, slug):
-    jobapp = JobApp.objects.get(slug=slug)
+def jobapp_page(request, job_id):
+    jobapp = JobApp.objects.get(id=job_id)
     return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp})
 
 

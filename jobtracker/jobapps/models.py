@@ -8,7 +8,6 @@ LOCATION_TYPE = {
 }
 # Create your models here.
 class JobApp(models.Model):
-    slug = models.SlugField()
     title = models.CharField(max_length=255)
     description = models.TextField()
     job_number = models.CharField(max_length=30, blank=True)
