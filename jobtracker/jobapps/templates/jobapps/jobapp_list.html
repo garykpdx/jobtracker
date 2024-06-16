@@ -37,7 +37,7 @@ Job App List
             <div class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</div>
 
             <div class="jobapp col text-start">
-                <a href="{% url 'jobapp' slug=jobapp.slug %}">
+                <a href="{% url 'jobapp' job_id=jobapp.id %}">
                     {{ jobapp.title }}
                 </a>
             </div>
