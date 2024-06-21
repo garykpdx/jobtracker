@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Tracker - New Job App
+{% endblock %}
+
+{% block content %}
+<div class="container-sm text-bg-primary p-3 rounded-5">
+    <div class="row align-items-start">
+        <div class="col mb-3">
+            <h1>Search Applications</h1>
+        </div>
+    </div>
+    <div class="row align-items-start mb-2">
+        <div class="col mb-3">
+            <p>radio buttons</p>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+                       checked>
+                <label class="form-check-label" for="exampleRadios1">
+                    Search by title
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1"
+                       checked>
+                <label class="form-check-label" for="exampleRadios1">
+                    Search by description
+                </label>
+            </div>
+        </div>
+        <div class="col mb-3">
+            <h1>Search Applications</h1>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

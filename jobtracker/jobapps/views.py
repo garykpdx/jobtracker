@@ -35,3 +35,7 @@ def new_jobapp(request):
     else:
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
+
+@login_required(login_url="/users/login/")
+def search_job(request):
+    return render(request, 'jobapps/search_job.html')
