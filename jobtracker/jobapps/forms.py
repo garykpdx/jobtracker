@@ -8,6 +8,7 @@ class CreateJobapp(forms.ModelForm):
         fields = [
             "company",
             "title",
+            "job_status",
             "description",
             "job_number",
             "city",
