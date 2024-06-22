@@ -38,4 +38,8 @@ def new_jobapp(request):
 
 @login_required(login_url="/users/login/")
 def search_job(request):
-    return render(request, 'jobapps/search_job.html')
+    search_results = []
+    if request.method == "POST":
+        return render(request, 'jobapps/search_job.html', {"search_results": search_results})
+
+    return render(request, 'jobapps/search_job.html', {"search_results": search_results})
