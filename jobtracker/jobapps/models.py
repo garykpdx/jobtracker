@@ -6,15 +6,25 @@ LOCATION_TYPE = {
     "HYBRID": "Hybrid",
     "REMOTE": "Remote",
 }
-# Create your models here.
+
+JOB_STATUS_TYPE = {
+    "APPLIED": "Applied",
+    "QUALIFIED": "Qualified",
+    "INTERVIEWED": "Interviewed",
+    "CLOSED": "Closed",
+    "OFFERED": "Offered Job",
+}
+
+
 class JobApp(models.Model):
     title = models.CharField(max_length=255)
+    job_status = models.CharField(max_length=15, default="APPLIED", choices=JOB_STATUS_TYPE)
     description = models.TextField()
     job_number = models.CharField(max_length=30, blank=True)
     company = models.CharField(max_length=100)
     applied_dt = models.DateField(auto_now_add=True)
     payrate = models.CharField(max_length=20, blank=True)
-    location_type = models.CharField(max_length=20, choices=LOCATION_TYPE)
+    location_type = models.CharField(max_length=10, choices=LOCATION_TYPE)
     job_url = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=50, blank=True)
     state = models.CharField(max_length=20, blank=True)
