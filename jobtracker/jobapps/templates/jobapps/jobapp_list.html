@@ -14,7 +14,8 @@ Job App List
         <div class="jobapp col text-start">
             <form class="d-flex" method=POST action="{% url 'search' %}">
                 {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
+                       name="search_terms">
                 <button class="btn btn-primary" type="submit">
                     Search
                 </button>

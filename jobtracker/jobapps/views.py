@@ -36,10 +36,13 @@ def new_jobapp(request):
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
 
+
 @login_required(login_url="/users/login/")
 def search_job(request):
-    search_results = []
     if request.method == "POST":
-        return render(request, 'jobapps/search_job.html', {"search_results": search_results})
+        search_terms = request.POST["search_terms"]
+        jobapps = JobApp.objects.filter(description__contains=search_terms)
+        count = len(jobapps)
+        return render(request, 'jobapps/search_job.html', {"jobapps": jobapps, "count": count})
 
-    return render(request, 'jobapps/search_job.html', {"search_results": search_results})
+    return render(request, 'jobapps/search_job.html', {})
