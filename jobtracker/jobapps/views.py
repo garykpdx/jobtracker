@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import (
     render,
     redirect,
@@ -41,7 +42,10 @@ def new_jobapp(request):
 def search_job(request):
     if request.method == "POST":
         search_terms = request.POST["search_terms"]
-        jobapps = JobApp.objects.filter(description__contains=search_terms)
+        jobapps = (JobApp.objects.filter(Q(description__contains=search_terms)
+                                         | Q(company__contains=search_terms)
+                                         | Q(job_number__contains=search_terms))
+                   .order_by("-applied_dt"))
         count = len(jobapps)
         return render(request, 'jobapps/search_job.html', {"jobapps": jobapps, "count": count})
 
