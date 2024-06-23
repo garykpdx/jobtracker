@@ -12,14 +12,21 @@ from . import forms
 # Create your views here.
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
-    jobapps = JobApp.objects.all().order_by("-applied_dt")
+    user = request.user
+    jobapps = JobApp.objects.filter(user=user).order_by("-applied_dt")
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
 
 # should convert with int converter for using with job_id unique ID: <int:job_id>
 @login_required(login_url="/users/login/")
 def jobapp_page(request, job_id):
-    jobapp = JobApp.objects.get(id=job_id)
+    user = request.user
+    try:
+        jobapp = JobApp.objects.get(id=job_id)
+    except JobApp.DoesNotExist:
+        return redirect("jobapps")
+    if jobapp.user != user:
+        return redirect("jobapps")
     return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp})
 
 
