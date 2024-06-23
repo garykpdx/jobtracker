@@ -24,54 +24,57 @@ Job Tracker - New Job App
         </div>
     </div>
 
-    <div class="row p-1">
-        <div class="jobapp col-1 text-start">
-            <p class="h4 bg-primary text-light">Date</p>
-        </div>
+    <div class="container p-2">
+        <table class="table table-light table-striped">
+            <tr>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Date</p>
+                </td>
 
-        <div class="jobapp col text-start">
-            <p class="h4 bg-primary text-light">Job Title</p>
-        </div>
-        <div class="jobapp col-2 text-start">
-            <p class="h4 bg-primary text-light">Company</p>
-        </div>
-        <div class="jobapp col-2 text-start">
-            <p class="h4 bg-primary text-light">City/State</p>
-        </div>
-        <div class="jobapp col-1 text-start">
-            <p class="h4 bg-primary text-light">Source</p>
-        </div>
-        <div class="jobapp col-1 text-start">
-            <p class="h4 bg-primary text-light">Job No</p>
-        </div>
-    </div>
-    {% for jobapp in jobapps %}
-    <div class="row p-1">
-        <div class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</div>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Job Title</p>
+                </td>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Company</p>
+                </td>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">City/State</p>
+                </td>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Source</p>
+                </td>
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Job No</p>
+                </td>
+            </tr>
+            {% for jobapp in jobapps %}
+            <tr>
+                <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</td>
 
-        <div class="jobapp col text-start">
-            <a href="{% url 'jobapp' job_id=jobapp.id %}">
-                {{ jobapp.title }}
-            </a>
-        </div>
-        <div class="jobapp col-2 text-start">
-            {{ jobapp.company }}
-        </div>
-        <div class="jobapp col-2 text-start">
-            {{ jobapp.city }} {{ jobapp.state }}
-        </div>
-        <div class="jobapp col-1 text-start">
-            {{ jobapp.job_source }}
-        </div>
-        <div class="jobapp col-1 text-start">
-            {{ jobapp.job_number }}
-        </div>
+                <td class="jobapp col text-start">
+                    <a href="{% url 'jobapp' job_id=jobapp.id %}">
+                        {{ jobapp.title }}
+                    </a>
+                </td>
+                <td class="jobapp text-start">
+                    {{ jobapp.company }}
+                </td>
+                <td class="jobapp text-start">
+                    {{ jobapp.city }} {{ jobapp.state }}
+                </td>
+                <td class="jobapp text-start">
+                    {{ jobapp.job_source }}
+                </td>
+                <td class="jobapp text-start">
+                    {{ jobapp.job_number }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    {% endfor %}
-</div>
-{% else %}
-<h1>No Results</h1>
-{% endif %}
+    {% else %}
+    <h1>No Results</h1>
+    {% endif %}
 </div>
 
 {% endblock %}
