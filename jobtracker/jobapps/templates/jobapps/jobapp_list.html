@@ -7,7 +7,22 @@ Job App List
 {% block content %}
 
 <div class="container m-2">
-    <h1 class="display-6 ms-2">Jobs Applied for</h1>
+    <div class="row p-1">
+        <div class="jobapp col-3 text-start">
+            <h2 class="display-6 ms-2">Jobs Applied for</h2>
+        </div>
+        <div class="jobapp col text-start">
+            <form class="d-flex" method=POST action="{% url 'search' %}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
+                       name="search_terms">
+                <button class="btn btn-primary" type="submit">
+                    Search
+                </button>
+            </form>
+
+        </div>
+    </div>
 
     <div class="container p-2">
         <div class="row p-1">

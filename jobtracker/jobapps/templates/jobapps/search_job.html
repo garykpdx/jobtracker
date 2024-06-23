@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Tracker - New Job App
+{% endblock %}
+
+{% block content %}
+{% if jobapps %}
+<div class="container m-2">
+    <div class="row p-1">
+        <div class="jobapp col-3 text-start">
+            <h2 class="display-6 ms-2">Jobs Applied for</h2>
+        </div>
+        <div class="jobapp col text-start">
+            <form class="d-flex" method=POST action="{% url 'search' %}">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
+                       name="search_terms">
+                <button class="btn btn-primary" type="submit">
+                    Search
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="row p-1">
+        <div class="jobapp col-1 text-start">
+            <p class="h4 bg-primary text-light">Date</p>
+        </div>
+
+        <div class="jobapp col text-start">
+            <p class="h4 bg-primary text-light">Job Title</p>
+        </div>
+        <div class="jobapp col-2 text-start">
+            <p class="h4 bg-primary text-light">Company</p>
+        </div>
+        <div class="jobapp col-2 text-start">
+            <p class="h4 bg-primary text-light">City/State</p>
+        </div>
+        <div class="jobapp col-1 text-start">
+            <p class="h4 bg-primary text-light">Source</p>
+        </div>
+        <div class="jobapp col-1 text-start">
+            <p class="h4 bg-primary text-light">Job No</p>
+        </div>
+    </div>
+    {% for jobapp in jobapps %}
+    <div class="row p-1">
+        <div class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</div>
+
+        <div class="jobapp col text-start">
+            <a href="{% url 'jobapp' job_id=jobapp.id %}">
+                {{ jobapp.title }}
+            </a>
+        </div>
+        <div class="jobapp col-2 text-start">
+            {{ jobapp.company }}
+        </div>
+        <div class="jobapp col-2 text-start">
+            {{ jobapp.city }} {{ jobapp.state }}
+        </div>
+        <div class="jobapp col-1 text-start">
+            {{ jobapp.job_source }}
+        </div>
+        <div class="jobapp col-1 text-start">
+            {{ jobapp.job_number }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<h1>No Results</h1>
+{% endif %}
+</div>
+
+{% endblock %}
