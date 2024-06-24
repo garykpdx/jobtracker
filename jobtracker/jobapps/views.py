@@ -54,6 +54,7 @@ def search_job(request):
                                          | Q(job_number__contains=search_terms))
                    .order_by("-applied_dt"))
         count = len(jobapps)
-        return render(request, 'jobapps/search_job.html', {"jobapps": jobapps, "count": count})
+        return render(request, 'jobapps/search_job.html',
+                      {"jobapps": jobapps, "count": count, "search_terms": search_terms})
 
     return render(request, 'jobapps/search_job.html', {})

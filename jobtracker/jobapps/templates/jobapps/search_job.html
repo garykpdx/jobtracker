@@ -20,7 +20,6 @@ Job Tracker - New Job App
                     Search
                 </button>
             </form>
-
         </div>
     </div>
 
@@ -73,7 +72,24 @@ Job Tracker - New Job App
         </table>
     </div>
     {% else %}
-    <h1>No Results</h1>
+    <div class="container m-2">
+        <div class="row p-1">
+            <div>
+                <h2 class="display-6 text-secondary ms-2"><b>No Results for "{{ search_terms }}"</b></h2>
+            </div>
+            <div class="jobapp col text-start">
+                <form class="d-flex" method=POST action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
+                           name="search_terms">
+                    <button class="btn btn-primary" type="submit">
+                        Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     {% endif %}
 </div>
 
