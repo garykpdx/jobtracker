@@ -16,7 +16,7 @@ Job Tracker - New Job App
                 <form action="{% url 'new-job' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form }}
-                    <button class="mt-3">Add Jobapp</button>
+                    <button class="btn btn-light mt-3">Add Jobapp</button>
                 </form>
             </div>
         </div>
