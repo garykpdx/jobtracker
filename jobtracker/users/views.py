@@ -28,7 +28,10 @@ def register_view(request):
             login(request, form.save())
             return redirect("jobapps")
     else:
-        form = RegisterUserForm()
+        if request.user.is_superuser:
+            form = RegisterUserForm()
+        else:
+            return redirect("jobapps")
     return render(request, "users/register.html", {"form": form})
 
 

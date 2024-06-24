@@ -42,8 +42,10 @@
                         User
                     </a>
                     <ul class="dropdown-menu">
+                        {% if user.is_superuser %}
                         <li><a class="dropdown-item" href="{% url 'users:register' %}">Register</a></li>
                         <li><hr class="dropdown-divider"></li>
+                        {% endif %}
                         <li>
                             <form class="dropdown-item" action="{% url 'users:logout' %}" method="post">
                                 {% csrf_token %}
