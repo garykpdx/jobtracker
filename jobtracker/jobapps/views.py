@@ -5,7 +5,7 @@ from django.shortcuts import (
 )
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import JobApp
+from .models import JobApp, JOB_STATUS_TYPE
 from . import forms
 
 
@@ -27,7 +27,12 @@ def jobapp_page(request, job_id):
         return redirect("jobapps")
     if jobapp.user != user:
         return redirect("jobapps")
-    return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp})
+    status_types = JOB_STATUS_TYPE.keys()
+    job_status_update = request.POST.get("job_status_update")
+    if job_status_update:
+        jobapp.job_status = job_status_update
+        jobapp.save()
+    return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp, "status_types": status_types})
 
 
 @login_required(login_url="/users/login/")

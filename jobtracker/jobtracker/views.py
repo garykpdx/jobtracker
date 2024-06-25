@@ -5,7 +5,7 @@ from jobapps.models import JobApp
 
 def homepage(request):
     # return HttpResponse("Hello world")
-    jobcount = JobApp.objects.count()
+    jobcount = JobApp.objects.filter(user=request.user).count()
     count_by_date = ((JobApp.objects.filter(user=request.user)
                      .values("applied_dt")
                      .annotate(date_count=Count("applied_dt")))
