@@ -16,7 +16,7 @@ Job App List
                 {% csrf_token %}
                 <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
                        name="search_terms">
-                <button class="btn btn-primary" type="submit">
+                    <button class="btn btn-primary" type="submit">
                     Search
                 </button>
             </form>
@@ -31,6 +31,9 @@ Job App List
                     <p class="h4 h4 text-dark">Date</p>
                 </td>
 
+                <td class="jobapp text-start">
+                    <p class="h4 h4 text-dark">Status</p>
+                </td>
                 <td class="jobapp text-start">
                     <p class="h4 h4 text-dark">Job Title</p>
                 </td>
@@ -51,6 +54,9 @@ Job App List
             <tr>
                 <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</td>
 
+                <td class="jobapp col text-start text-secondary">
+                        {{ jobapp.job_status }}
+                </td>
                 <td class="jobapp col text-start">
                     <a href="{% url 'jobapp' job_id=jobapp.id %}">
                         {{ jobapp.title }}

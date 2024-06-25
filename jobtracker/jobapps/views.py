@@ -13,7 +13,7 @@ from . import forms
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
     user = request.user
-    jobapps = JobApp.objects.filter(user=user).order_by("-applied_dt")
+    jobapps = JobApp.objects.filter(user=user).filter(~Q(job_status="CLOSED")).order_by("-applied_dt")
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
 
