@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from django.db.models import Q
 from django.shortcuts import (
     render,
@@ -13,7 +15,13 @@ from . import forms
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
     user = request.user
-    jobapps = JobApp.objects.filter(user=user).filter(~Q(job_status="CLOSED")).order_by("-applied_dt")
+    today = date.today()
+    start_date = today - timedelta(days=30)
+    jobapps = (JobApp.objects
+               .filter(user=user)
+               .filter(applied_dt__range=(start_date,today))
+               .filter(~Q(job_status="CLOSED"))
+               .order_by("-applied_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
 
