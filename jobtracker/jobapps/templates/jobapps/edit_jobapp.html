@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Tracker - {{ jobapp.company }}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm">
+    <form>
+        <div class="row mb-1 text-align-start">
+            <div class="col">
+                <p class="h4 bg-primary text-light">Job Title</p>
+            </div>
+            <div class="col">
+                <p class="h4 bg-primary text-light">Company</p>
+            </div>
+            <div class="col-3">
+                <p class="h4 bg-primary text-light">Date</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col text-start">
+                <input name="title" value="{{ jobapp.title }}" size="40">
+            </div>
+            <div class="col text-start">
+                <input name="company" value="{{ jobapp.company }}" size="40">
+            </div>
+            <div class="col-3 text-start">
+                {{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-primary text-light">City / State</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-primary text-light">Job Number</p>
+            </div>
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-primary text-light">Location</p>
+            </div>
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-primary text-light">Contractor</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col-2 text-start">
+                <input name="city" value="{{ jobapp.city }}">
+            </div>
+            <div class="col-1 text-start">
+                <input name="state" value="{{ jobapp.state }}" maxlength="5" size="2">
+            </div>
+            <div class="col-2 text-start">
+                <input name="job_number" value="{{ jobapp.job_number }}">
+            </div>
+            <div class="col-3 text-start">
+                {{ jobapp.location_type }}
+            </div>
+            <div class="col-3 text-start">
+                <input name="contractor_name" value="{{ jobapp.contractor_name }}">
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-4 my-2 text-start">
+                <p class="h4 bg-primary text-light">Job Status</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-primary text-light">Pay Rate</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-primary text-light">Job Source</p>
+            </div>
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-primary text-light">Job URL</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col-4 text-start">
+                {{ jobapp.job_status }}
+                <form class="d-flex" method=POST action="{% url 'edit-job' job_id=jobapp.id %}">
+                    {% csrf_token %}
+                    <select class="form-select m-2" aria-label="Status Update" name="job_status_update"
+                            style="width:250px;">
+                        <option selected>-</option>
+                        {% for status_type in status_types %}
+                        <option>{{ status_type }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-primary m-3" type="submit">
+                        Update
+                    </button>
+                </form>
+            </div>
+            <div class="col-2 text-start">
+                <input name="payrate" value="{{ jobapp.payrate }}">
+            </div>
+            <div class="col-2 text-start">
+                <input name="job_source" value="{{ jobapp.job_source }}">
+            </div>
+            <div class="col-2 text-start">
+                <input name="job_url" value="{{ jobapp.job_url }}" type="url">
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col">
+                <p class="h4 bg-primary text-light">Description</p>
+                <textarea rows="30" cols="120">{{ jobapp.description }}</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -19,7 +19,7 @@ def jobapp_list(request):
     start_date = today - timedelta(days=30)
     jobapps = (JobApp.objects
                .filter(user=user)
-               .filter(applied_dt__range=(start_date,today))
+               .filter(applied_dt__range=(start_date, today))
                .filter(~Q(job_status="CLOSED"))
                .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
@@ -56,6 +56,23 @@ def new_jobapp(request):
     else:
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
+
+
+@login_required(login_url="/users/login/")
+def edit_jobapp(request, job_id):
+    user = request.user
+    try:
+        jobapp = JobApp.objects.get(id=job_id)
+    except JobApp.DoesNotExist:
+        return redirect("jobapps")
+    if jobapp.user != user:
+        return redirect("jobapps")
+    status_types = JOB_STATUS_TYPE.keys()
+    job_status_update = request.POST.get("job_status_update")
+    if job_status_update:
+        jobapp.job_status = job_status_update
+        jobapp.save()
+    return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "status_types": status_types})
 
 
 @login_required(login_url="/users/login/")
