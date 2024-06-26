@@ -21,7 +21,7 @@ def jobapp_list(request):
                .filter(user=user)
                .filter(applied_dt__range=(start_date,today))
                .filter(~Q(job_status="CLOSED"))
-               .order_by("-applied_dt"))
+               .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
 
@@ -65,7 +65,7 @@ def search_job(request):
         jobapps = (JobApp.objects.filter(Q(description__contains=search_terms)
                                          | Q(company__contains=search_terms)
                                          | Q(job_number__contains=search_terms))
-                   .order_by("-applied_dt"))
+                   .order_by("-created_dt"))
         count = len(jobapps)
         return render(request, 'jobapps/search_job.html',
                       {"jobapps": jobapps, "count": count, "search_terms": search_terms})
