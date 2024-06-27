@@ -30,7 +30,7 @@ def jobapp_list(request):
 def jobapp_page(request, job_id):
     user = request.user
     try:
-        jobapp = JobApp.objects.get(id=job_id)
+        jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
         return redirect("jobapps")
     if jobapp.user != user:
@@ -62,17 +62,19 @@ def new_jobapp(request):
 def edit_jobapp(request, job_id):
     user = request.user
     try:
-        jobapp = JobApp.objects.get(id=job_id)
+        jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
         return redirect("jobapps")
     if jobapp.user != user:
         return redirect("jobapps")
+    form = forms.CreateJobapp(request.POST or None, instance=jobapp)
+    if form.is_valid():
+        form.save()
+        return redirect("jobapp", job_id=job_id)
     status_types = JOB_STATUS_TYPE.keys()
-    job_status_update = request.POST.get("job_status_update")
-    if job_status_update:
-        jobapp.job_status = job_status_update
-        jobapp.save()
-    return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "status_types": status_types})
+
+    return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "form": form,
+                                                        "status_types": status_types})
 
 
 @login_required(login_url="/users/login/")
