@@ -8,6 +8,11 @@ Job Tracker - {{ jobapp.company }}
 <div class="container-sm">
     <div class="row mb-1 text-align-start">
         <div class="col">
+            <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-primary m-3" type="submit">Edit Job</a>
+        </div>
+    </div>
+    <div class="row mb-1 text-align-start">
+        <div class="col">
             <p class="h4 bg-primary text-light">Job Title</p>
         </div>
         <div class="col">
@@ -69,7 +74,7 @@ Job Tracker - {{ jobapp.company }}
         <div class="col-2 my-2 text-start">
             <p class="h4 bg-primary text-light">Job Source</p>
         </div>
-        <div class="col-3 my-2 text-start">
+        <div class="col-5 my-2 text-start">
             <p class="h4 bg-primary text-light">Job URL</p>
         </div>
     </div>
@@ -81,10 +86,10 @@ Job Tracker - {{ jobapp.company }}
                 <select class="form-select m-3" aria-label="Status Update" name="job_status_update">
                     <option selected></option>
                     {% for status_type in status_types %}
-                        <option>{{ status_type }}</option>
+                    <option>{{ status_type }}</option>
                     {% endfor %}
                 </select>
-                <button class="btn btn-primary m-3" type="submit">
+                <button class="btn btn-outline-primary btn-sm m-3" type="submit">
                     Update
                 </button>
             </form>
@@ -95,7 +100,7 @@ Job Tracker - {{ jobapp.company }}
         <div class="col-2 text-start">
             {{ jobapp.job_source }}
         </div>
-        <div class="col-2 text-start">
+        <div class="col-5 text-start">
             <a href="{{ jobapp.job_url }}" target="_blank">
                 {{ jobapp.title }}
             </a>

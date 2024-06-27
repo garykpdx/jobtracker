@@ -19,7 +19,7 @@ def jobapp_list(request):
     start_date = today - timedelta(days=30)
     jobapps = (JobApp.objects
                .filter(user=user)
-               .filter(applied_dt__range=(start_date,today))
+               .filter(applied_dt__range=(start_date, today))
                .filter(~Q(job_status="CLOSED"))
                .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
@@ -30,7 +30,7 @@ def jobapp_list(request):
 def jobapp_page(request, job_id):
     user = request.user
     try:
-        jobapp = JobApp.objects.get(id=job_id)
+        jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
         return redirect("jobapps")
     if jobapp.user != user:
@@ -56,6 +56,25 @@ def new_jobapp(request):
     else:
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
+
+
+@login_required(login_url="/users/login/")
+def edit_jobapp(request, job_id):
+    user = request.user
+    try:
+        jobapp = JobApp.objects.filter(user=user).get(id=job_id)
+    except JobApp.DoesNotExist:
+        return redirect("jobapps")
+    if jobapp.user != user:
+        return redirect("jobapps")
+    form = forms.CreateJobapp(request.POST or None, instance=jobapp)
+    if form.is_valid():
+        form.save()
+        return redirect("jobapp", job_id=job_id)
+    status_types = JOB_STATUS_TYPE.keys()
+
+    return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "form": form,
+                                                        "status_types": status_types})
 
 
 @login_required(login_url="/users/login/")
