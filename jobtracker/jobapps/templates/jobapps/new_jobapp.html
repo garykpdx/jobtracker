@@ -6,20 +6,23 @@ Job Tracker - New Job App
 
 {% block content %}
 <div class="container-sm text-bg-primary p-3 rounded-5">
-        <div class="row align-items-start">
-            <div class="col mb-3">
-                <h1>New Job Application</h1>
-            </div>
+    <div class="row align-items-start">
+        <div class="col mb-3">
+            <h1>New Job Application</h1>
         </div>
+    </div>
+    <div class="form-group">
         <div class="row align-items-start mb-2">
-            <div class="col-4 m-3 text-top">
+            <div class="col-8 m-3 text-top">
+
                 <form action="{% url 'new-job' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form }}
-                    <button class="btn btn-light mt-3">Add Jobapp</button>
+                    {{ form.as_p }}
+                    <button class="btn btn-light mt-3">Add Job</button>
                 </form>
             </div>
         </div>
+    </div>
 </div>
 
 {% endblock %}

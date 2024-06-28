@@ -6,11 +6,23 @@ Job Tracker - {{ jobapp.company }}
 
 {% block content %}
 <div class="container-sm text-bg-primary p-3 rounded-5">
-    <form action="" method=POST>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-light mt-3">Save</button>
-    </form>
+    <div class="row align-items-start">
+        <div class="col mb-3">
+            <h1>Edit Job Application</h1>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row align-items-start mb-2">
+            <div class="col-8 m-3 text-top">
+
+                <form action="{% url 'edit-job' jobapp.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-light mt-3">Save Job</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
