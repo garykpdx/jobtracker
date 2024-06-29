@@ -5,13 +5,13 @@ Register User
 {% endblock %}
 
 {% block content %}
-<div class="container text-bg-primary p-3 rounded-5">
+<div class="container text-bg-success p-3 rounded-5">
     <h1>Register User</h1>
     <form action="{% url 'users:register' %}" method="post">
         {% csrf_token %}
         {{ form }}
         <div class="container mt-2">
-            <button>Submit</button>
+            <button class="btn btn-light">Submit</button>
         </div>
     </form>
 </div>
