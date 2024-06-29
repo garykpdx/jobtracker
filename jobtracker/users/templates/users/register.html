@@ -9,7 +9,7 @@ Register User
     <h1>Register User</h1>
     <form action="{% url 'users:register' %}" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form.as_p }}
         <div class="container mt-2">
             <button class="btn btn-light">Submit</button>
         </div>
