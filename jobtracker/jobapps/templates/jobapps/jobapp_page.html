@@ -8,18 +8,18 @@ Job Tracker - {{ jobapp.company }}
 <div class="container-sm">
     <div class="row mb-1 text-align-start">
         <div class="col">
-            <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-primary m-3" type="submit">Edit Job</a>
+            <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-success m-3" type="submit">Edit Job</a>
         </div>
     </div>
     <div class="row mb-1 text-align-start">
         <div class="col">
-            <p class="h4 bg-primary text-light">Job Title</p>
+            <p class="h4 bg-success text-light">Job Title</p>
         </div>
         <div class="col">
-            <p class="h4 bg-primary text-light">Company</p>
+            <p class="h4 bg-success text-light">Company</p>
         </div>
         <div class="col-3">
-            <p class="h4 bg-primary text-light">Date</p>
+            <p class="h4 bg-success text-light">Date</p>
         </div>
     </div>
     <div class="row mb-4 text-align-start">
@@ -35,16 +35,16 @@ Job Tracker - {{ jobapp.company }}
     </div>
     <div class="row mb-1">
         <div class="col-3 my-2 text-start">
-            <p class="h4 bg-primary text-light">City / State</p>
+            <p class="h4 bg-success text-light">City / State</p>
         </div>
         <div class="col-2 my-2 text-start">
-            <p class="h4 bg-primary text-light">Job Number</p>
+            <p class="h4 bg-success text-light">Job Number</p>
         </div>
         <div class="col-3 my-2 text-start">
-            <p class="h4 bg-primary text-light">Location</p>
+            <p class="h4 bg-success text-light">Location</p>
         </div>
         <div class="col-3 my-2 text-start">
-            <p class="h4 bg-primary text-light">Contractor</p>
+            <p class="h4 bg-success text-light">Contractor</p>
         </div>
     </div>
     <div class="row mb-4 text-align-start">
@@ -66,16 +66,16 @@ Job Tracker - {{ jobapp.company }}
     </div>
     <div class="row mb-1">
         <div class="col-3 my-2 text-start">
-            <p class="h4 bg-primary text-light">Job Status</p>
+            <p class="h4 bg-success text-light">Job Status</p>
         </div>
         <div class="col-2 my-2 text-start">
-            <p class="h4 bg-primary text-light">Pay Rate</p>
+            <p class="h4 bg-success text-light">Pay Rate</p>
         </div>
         <div class="col-2 my-2 text-start">
-            <p class="h4 bg-primary text-light">Job Source</p>
+            <p class="h4 bg-success text-light">Job Source</p>
         </div>
         <div class="col-5 my-2 text-start">
-            <p class="h4 bg-primary text-light">Job URL</p>
+            <p class="h4 bg-success text-light">Job URL</p>
         </div>
     </div>
     <div class="row mb-4 text-align-start">
@@ -89,7 +89,7 @@ Job Tracker - {{ jobapp.company }}
                     <option>{{ status_type }}</option>
                     {% endfor %}
                 </select>
-                <button class="btn btn-outline-primary btn-sm m-3" type="submit">
+                <button class="btn btn-outline-success btn-sm m-3" type="submit">
                     Update
                 </button>
             </form>
@@ -108,7 +108,7 @@ Job Tracker - {{ jobapp.company }}
     </div>
     <div class="row mb-4">
         <div class="col">
-            <p class="h4 bg-primary text-light">Description</p>
+            <p class="h4 bg-success text-light">Description</p>
 
             <pre>{{ jobapp.description }}</pre>
         </div>
