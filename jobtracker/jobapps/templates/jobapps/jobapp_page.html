@@ -101,8 +101,9 @@ Job Tracker - {{ jobapp.company }}
             {{ jobapp.job_source }}
         </div>
         <div class="col-5 text-start">
-            <a href="{{ jobapp.job_url }}" target="_blank">
-                {{ jobapp.title }}
+            <a class="link-success link-offset-1 link-underline-opacity-50"
+               href="{{ jobapp.job_url }}" target="_blank">
+                {{ jobapp.title }} - {{ jobapp.company }}
             </a>
         </div>
     </div>
