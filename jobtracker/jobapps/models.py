@@ -4,17 +4,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 LOCATION_TYPE = {
-    "ONSITE": "Onsite",
-    "HYBRID": "Hybrid",
-    "REMOTE": "Remote",
+    "Onsite": "Onsite",
+    "Hybrid": "Hybrid",
+    "Remote": "Remote",
 }
 
 JOB_STATUS_TYPE = {
-    "APPLIED": "Applied",
-    "QUALIFIED": "Qualified",
-    "INTERVIEWED": "Interviewed",
-    "CLOSED": "Closed",
-    "OFFERED": "Offered Job",
+    "Applied": "Applied",
+    "Qualified": "Qualified",
+    "Interviewed": "Interviewed",
+    "Closed": "Closed",
+    "Offered": "Offered",
 }
 
 
