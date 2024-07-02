@@ -17,10 +17,9 @@ def jobapp_list(request):
     user = request.user
     today = date.today()
     start_date = today - timedelta(days=30)
-    jobapps = (JobApp.objects
-               .filter(user=user)
+    jobapps = (JobApp.objects.filter(user=user)
                .filter(applied_dt__range=(start_date, today))
-               .filter(~Q(job_status="CLOSED"))
+               .filter(~Q(job_status__iexact="Closed"))
                .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
@@ -81,9 +80,9 @@ def edit_jobapp(request, job_id):
 def search_job(request):
     if request.method == "POST":
         search_terms = request.POST["search_terms"]
-        jobapps = (JobApp.objects.filter(Q(description__contains=search_terms)
-                                         | Q(company__contains=search_terms)
-                                         | Q(job_number__contains=search_terms))
+        jobapps = (JobApp.objects.filter(Q(description__icontains=search_terms)
+                                         | Q(company__icontains=search_terms)
+                                         | Q(job_number__icontains=search_terms))
                    .order_by("-created_dt"))
         count = len(jobapps)
         return render(request, 'jobapps/search_job.html',
