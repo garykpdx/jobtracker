@@ -19,7 +19,7 @@ def jobapp_list(request):
     start_date = today - timedelta(days=30)
     jobapps = (JobApp.objects.filter(user=user)
                .filter(applied_dt__range=(start_date, today))
-               .filter(~Q(job_status__iexact="CLOSED"))
+               .filter(~Q(job_status__iexact="Closed"))
                .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
