@@ -24,10 +24,6 @@ Job Lizard - Contractor List
             <tr>
                 <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Name</p>
-                    <a class="link-success link-offset-1 link-underline-opacity-50"
-                       href="{% url 'contractors:contractor_page' contractor_id=contractor.id %}">
-                        {{ contractor.name }} - {{ contractor.company }}
-                    </a>
                 </td>
                 <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Company</p>
@@ -42,7 +38,10 @@ Job Lizard - Contractor List
             {% for contractor in contractors %}
             <tr>
                 <td class="jobapp col text-start">
-                    {{ contractor.name }}
+                    <a class="link-success link-offset-1 link-underline-opacity-50"
+                       href="{% url 'contractors:contractor_page' contractor.id %}">
+                        {{ contractor.name }}
+                    </a>
                 </td>
                 <td class="jobapp col text-start">
                     {{ contractor.company }}

@@ -21,9 +21,10 @@ def contractor_page(request, contractor_id):
     try:
         contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
     except Contractor.DoesNotExist:
-        return redirect("contractor_list")
+        return redirect("contractors:contractor_list")
+
     if contractor.app_user != user:
-        return redirect("contractor_list")
+        return redirect("contractors:contractor_list")
 
     return render(request, 'contractors/contractor_page.html', {"contractor": contractor})
 
