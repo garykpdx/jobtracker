@@ -8,8 +8,8 @@ Job Lizard - Contractor List
 
 <div class="container m-2">
     <div class="row p-1">
-        <div class="jobapp col text-start">
-            <form class="d-flex" method=POST action="{% url 'search' %}">
+        <div class="col text-start">
+            <form class="d-flex" method=POST action="{% url 'contractor:new_contractor' %}">
                 {% csrf_token %}
                     <button class="btn btn-success" type="submit">
                     New Contractor
