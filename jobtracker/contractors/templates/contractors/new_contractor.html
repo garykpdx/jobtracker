@@ -1,12 +1,28 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Job Lizard - {{ jobapp.company }}
+Job Lizard - New Contractor
 {% endblock %}
 
 {% block content %}
-<div class="container-sm">
-    <h1>New contractor</h1>
+<div class="container-sm text-bg-light p-3 rounded-5">
+    <div class="row align-items-start">
+        <div class="col mb-3">
+            <h1>New Contractor</h1>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row align-items-start mb-2">
+            <div class="col-8 m-3 text-top">
+
+                <form action="{% url 'contractors:new_contractor' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-success mt-3">Add Contractor</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

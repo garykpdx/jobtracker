@@ -9,7 +9,7 @@ from . import models
 
 class ContractorForm(forms.ModelForm):
     class Meta:
-        model = models.JobApp
+        model = models.Contractor
         fields = [
             "name",
             "company",
@@ -20,6 +20,6 @@ class ContractorForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
             "company": forms.TextInput(attrs={"class": "form-control"}),
-            "phone": forms.Select(attrs={"class": "form-control form-select"}),
-            "email": forms.Textarea(attrs={"class": "form-control"}),
+            "phone": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
         }

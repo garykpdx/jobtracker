@@ -9,7 +9,7 @@ Job Lizard - Contractor List
 <div class="container m-2">
     <div class="row p-1">
         <div class="col text-start">
-            <form class="d-flex" method=POST action="{% url 'contractor:new_contractor' %}">
+            <form class="d-flex" method=POST action="{% url 'contractors:new_contractor' %}">
                 {% csrf_token %}
                     <button class="btn btn-success" type="submit">
                     New Contractor
@@ -22,16 +22,20 @@ Job Lizard - Contractor List
     <div class="container p-2">
         <table class="table table-light table-striped">
             <tr>
-                <td class="jobapp text-start">
+                <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Name</p>
+                    <a class="link-success link-offset-1 link-underline-opacity-50"
+                       href="{% url 'contractors:contractor_page' contractor_id=contractor.id %}">
+                        {{ contractor.name }} - {{ contractor.company }}
+                    </a>
                 </td>
-                <td class="jobapp text-start">
+                <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Company</p>
                 </td>
-                <td class="jobapp text-start">
+                <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Phone</p>
                 </td>
-                <td class="jobapp text-start">
+                <td class="contractor text-start">
                     <p class="h4 h4 text-dark">Email</p>
                 </td>
             </tr>

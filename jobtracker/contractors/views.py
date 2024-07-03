@@ -16,10 +16,17 @@ def contractors_list(request):
 
 
 @login_required(login_url="/users/login/")
-def contractor_page(request):
+def contractor_page(request, contractor_id):
     user = request.user
+    try:
+        contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
+    except Contractor.DoesNotExist:
+        return redirect("contractor_list")
+    if contractor.app_user != user:
+        return redirect("contractor_list")
 
-    return render(request, 'contractors/contractor_page.html', {})
+    return render(request, 'contractors/contractor_page.html', {"contractor": contractor})
+
 
 @login_required(login_url="/users/login/")
 def new_contractor(request):
@@ -28,9 +35,9 @@ def new_contractor(request):
         if form.is_valid():
             # save with user
             contractor = form.save(commit=False)
-            contractor.user = request.user
+            contractor.app_user = request.user
             contractor.save()
-            return redirect("details")
+            return redirect("contractors:contractor_page", contractor_id=contractor.id)
     else:
         form = forms.ContractorForm()
     return render(request, 'contractors/new_contractor.html', {"form": form})

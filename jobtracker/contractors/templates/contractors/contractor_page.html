@@ -1,12 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-Job Lizard - {{ jobapp.company }}
+Job Lizard - {{ contractor.name }}
 {% endblock %}
 
 {% block content %}
 <div class="container-sm">
-    <h1>contractor: ____</h1>
+    <h1>contractor: {{ contractor.name }} / {{ contractor.company }}</h1>
 </div>
 
 {% endblock %}
