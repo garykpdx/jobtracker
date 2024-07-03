@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Job Lizard - Contractor List
+{% endblock %}
+
+{% block content %}
+
+<div class="container m-2">
+    <div class="row p-1">
+        <div class="col text-start">
+            <form class="d-flex" method=POST action="{% url 'contractors:new_contractor' %}">
+                {% csrf_token %}
+                    <button class="btn btn-success" type="submit">
+                    New Contractor
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="container p-2">
+        <table class="table table-light table-striped">
+            <tr>
+                <td class="contractor text-start">
+                    <p class="h4 h4 text-dark">Name</p>
+                </td>
+                <td class="contractor text-start">
+                    <p class="h4 h4 text-dark">Company</p>
+                </td>
+                <td class="contractor text-start">
+                    <p class="h4 h4 text-dark">Phone</p>
+                </td>
+                <td class="contractor text-start">
+                    <p class="h4 h4 text-dark">Email</p>
+                </td>
+            </tr>
+            {% for contractor in contractors %}
+            <tr>
+                <td class="jobapp col text-start">
+                    <a class="link-success link-offset-1 link-underline-opacity-50"
+                       href="{% url 'contractors:contractor_page' contractor.id %}">
+                        {{ contractor.name }}
+                    </a>
+                </td>
+                <td class="jobapp col text-start">
+                    {{ contractor.company }}
+                </td>
+                <td class="jobapp text-start">
+                    {{ contractor.phone }}
+                </td>
+                <td class="jobapp text-start">
+                    {{ contractor.email }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+{% endblock %}
