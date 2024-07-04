@@ -6,16 +6,24 @@ Job Lizard - Main
 
 {% block content %}
 <div class="container m-2">
-    <p class="h4 bg-success text-light">Job Statistics</p>
-    <p><b>Total jobs applied for in last 30 days:</b> {{ jobcount }}</p>
+    <div class="row">
+        <div class="col-4">
+            <p class="h4 bg-success text-light">Job Statistics</p>
+            <p><b>Total jobs applied for in the last 30 days:</b> {{ jobcount }}</p>
+        </div>
+    </div>
 </div>
 
 <div class="container m-2">
-    <p class="h4 bg-success text-light">Count By Date</p>
     <div class="row p-1">
-            <div class="jobapp col-2 text-start"><b>Date</b></div>
-            <div class="jobapp col-2 text-start"><b>Number of jobs</b></div>
-    {% for count in daily_counts %}
+        <div class="col-4">
+            <p class="h4 bg-success text-light">Count By Date</p>
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="jobapp col-2 text-start"><b>Date</b></div>
+        <div class="jobapp col-2 text-start"><b>Number of jobs</b></div>
+        {% for count in daily_counts %}
         <div class="row p-1">
             <div class="jobapp col-2 text-start">
                 {{ count.applied_dt|date:"SHORT_DATE_FORMAT" }}
@@ -24,7 +32,7 @@ Job Lizard - Main
                 {{ count.date_count }}
             </div>
         </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
 
-{% endblock %}
+    {% endblock %}
