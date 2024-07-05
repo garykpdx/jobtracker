@@ -1,5 +1,5 @@
-# jobtracker
-Application for tracking job applications
+# Jobtracker
+This is a Django application for tracking job applications
 
 ## Startup
 You can start the container in the base directory with
