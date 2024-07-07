@@ -7,8 +7,13 @@ Job Lizard - Main
 {% block content %}
 <div class="container m-2">
     <div class="row">
+        <div class="jobapp col-3 text-start">
+            <h2 class="display-6 text-secondary ms-2"><b>Statistics</b></h2>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-4">
-            <p class="h4 bg-success text-light">Job Statistics</p>
+            <p class="h4 bg-success text-light">Application Statistics</p>
             <p><b>Total job applications in the last 30 days:</b> {{ jobcount }}</p>
         </div>
     </div>
