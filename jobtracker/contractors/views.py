@@ -30,6 +30,24 @@ def contractor_page(request, contractor_id):
 
 
 @login_required(login_url="/users/login/")
+def edit_contractor(request, contractor_id):
+    user = request.user
+    try:
+        contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
+    except Contractor.DoesNotExist:
+        return redirect("contractors")
+    if contractor.user != user:
+        return redirect("contractors")
+    form = forms.ContractorForm(request.POST or None, instance=contractor)
+    if form.is_valid():
+        form.save()
+        return redirect("contractor_page", contractor_id=contractor_id)
+
+    return render(request, 'contractors/edit_contractor.html', {"contractor": contractor,
+                                                                "form": form})
+
+
+@login_required(login_url="/users/login/")
 def new_contractor(request):
     if request.method == "POST":
         form = forms.ContractorForm(request.POST)
