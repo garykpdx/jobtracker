@@ -7,6 +7,11 @@ Job Lizard - {{ contractor.name }}
 {% block content %}
 <div class="container-sm">
     <div class="row mb-1 text-align-start">
+        <div class="col">
+            <a href="{% url 'contractors:edit_contractor' contractor.id %}" class="btn btn-success m-3" type="submit">Edit Contractor</a>
+        </div>
+    </div>
+    <div class="row mb-1 text-align-start">
         <div class="col-2">
             <p class="h4 bg-success text-light">Name</p>
         </div>
