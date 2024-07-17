@@ -35,16 +35,17 @@ def edit_contractor(request, contractor_id):
     try:
         contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
     except Contractor.DoesNotExist:
-        return redirect("contractors")
-    if contractor.user != user:
-        return redirect("contractors")
+        return redirect("contractors:contractor_list")
+    # if contractor.app_user != user:
+    #     return redirect("contractors:contractor_list")
+
     form = forms.ContractorForm(request.POST or None, instance=contractor)
     if form.is_valid():
         form.save()
-        return redirect("contractor_page", contractor_id=contractor_id)
+        return redirect("contractors:contractor_page", contractor_id=contractor_id)
 
     return render(request, 'contractors/edit_contractor.html', {"contractor": contractor,
-                                                                "form": form})
+                                                                "form": form, "username": user})
 
 
 @login_required(login_url="/users/login/")

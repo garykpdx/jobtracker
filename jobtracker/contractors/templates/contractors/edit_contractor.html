@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% extends 'layout.html' %}
+{% extends 'layout.html' %}
 
 {% block title %}
 Job Lizard - {{ contractor.name }}
@@ -19,10 +15,10 @@ Job Lizard - {{ contractor.name }}
         <div class="row align-items-start mb-2">
             <div class="col-8 m-3 text-top">
 
-                <form action="{% url 'edit-job' jobapp.id %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'contractors:edit_contractor' contractor.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{  }}
-                    <button class="btn btn-success mt-3">Save Job</button>
+                    {{ form.as_p }}
+                    <button class="btn btn-success mt-3">Save</button>
                 </form>
             </div>
         </div>
@@ -30,9 +26,6 @@ Job Lizard - {{ contractor.name }}
 </div>
 
 {% endblock %}
-</title>
-</head>
-<body>
 
 </body>
 </html>
