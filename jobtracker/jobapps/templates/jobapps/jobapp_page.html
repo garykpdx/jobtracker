@@ -101,10 +101,14 @@ Job Lizard - {{ jobapp.company }}
             {{ jobapp.job_source }}
         </div>
         <div class="col-5 text-start">
+            {% if jobapp.job_url == "" %}
+            <p>None</p>
+            {% else %}
             <a class="link-success link-offset-1 link-underline-opacity-50"
                href="{{ jobapp.job_url }}" target="_blank">
                 {{ jobapp.title }} - {{ jobapp.company }}
             </a>
+            {% endif %}
         </div>
     </div>
     <div class="row mb-4">
