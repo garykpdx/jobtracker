@@ -11,7 +11,7 @@ from . import forms
 @login_required(login_url="/users/login/")
 def contractors_list(request):
     user = request.user
-    contractors = (Contractor.objects.filter(app_user=user).order_by("company"))
+    contractors = (Contractor.objects.filter(app_user=user).order_by("-created_dt"))
     return render(request, 'contractors/contractor_list.html', {"contractors": contractors})
 
 
