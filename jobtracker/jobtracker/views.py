@@ -6,6 +6,8 @@ from jobapps.models import JobApp
 
 
 def homepage(request):
+    logged_in = request.user.is_authenticated
+    username = request.user.username
     today = date.today()
     start_date = today - timedelta(days=30)
     try:
@@ -21,4 +23,5 @@ def homepage(request):
         jobcount = 0
         count_by_date = []
 
-    return render(request, 'home.html', {'jobcount': jobcount, 'daily_counts': count_by_date})
+    return render(request, 'home.html', {'jobcount': jobcount, 'daily_counts': count_by_date,
+                                                            'logged_in': logged_in, 'username': username})
