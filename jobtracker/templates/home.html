@@ -17,10 +17,12 @@ Job Lizard - Main
     </div>
 
     <div class="row">
+        {% if logged_in %}
         <div class="col-4">
             <p class="h4 bg-success text-light">Application Statistics</p>
             <p><b>Total job applications in the last 30 days:</b> {{ jobcount }}</p>
         </div>
+        {% endif %}
     </div>
 </div>
 
