@@ -6,7 +6,7 @@ from jobapps.models import JobApp
 
 
 def homepage(request):
-    logged_in = request.user.username != ''
+    logged_in = request.user.is_authenticated
     username = request.user.username
     today = date.today()
     start_date = today - timedelta(days=30)
