@@ -7,6 +7,7 @@ LOCATION_TYPE = {
     "Onsite": "Onsite",
     "Hybrid": "Hybrid",
     "Remote": "Remote",
+    "Unknown": "Unknown"
 }
 
 JOB_STATUS_TYPE = {
