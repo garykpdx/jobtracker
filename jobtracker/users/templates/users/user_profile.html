@@ -6,12 +6,12 @@ Job Lizard - User Profile
 
 {% block content %}
 <div class="container-sm text-bg-light p-3 rounded-5">
-    <h1>Profile for {{ request.user.username }}</h1>
+    <h1 class="text-secondary">Profile for {{ request.user.username }}</h1>
     <form action="{% url 'users:profile' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <div class="container mt-2">
-            <button class="btn btn-light">Save</button>
+            <button class="btn btn-success mt-3">Save</button>
         </div>
     </form>
 </div>
