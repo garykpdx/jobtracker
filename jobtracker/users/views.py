@@ -61,7 +61,7 @@ def profile_view(request):
 
 def login_view(request):
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST, instance=request.user)
+        form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
             if "next" in request.POST:
