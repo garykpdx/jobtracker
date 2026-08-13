@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from .models import JobApp, JOB_STATUS_TYPE
 from . import forms
 
-
 # Create your views here.
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
@@ -68,6 +67,7 @@ def edit_jobapp(request, job_id):
         return redirect("jobapps")
     form = forms.CreateJobapp(request.POST or None, instance=jobapp)
     if form.is_valid():
+
         form.save()
         return redirect("jobapp", job_id=job_id)
     status_types = JOB_STATUS_TYPE.keys()
