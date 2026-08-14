@@ -9,9 +9,23 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import JobApp, JOB_STATUS_TYPE
 from . import forms
+import bleach
 
 
-# Create your views here.
+ALLOWED_TAGS = [
+    "p", "br", "strong", "em", "b", "i", "u", "ul", "ol", "li", "a",
+    "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "hr",
+]
+ALLOWED_ATTRS = {"a": ["href", "title", "target", "rel"]}
+
+
+# def save(self, *args, **kwargs):
+#     self.description = bleach.clean(
+#         self.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS
+#     )
+#     super().save(*args, **kwargs)
+
+
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
     user = request.user
@@ -50,6 +64,7 @@ def new_jobapp(request):
             # save with user
             jobapp = form.save(commit=False)
             jobapp.user = request.user
+            jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
             jobapp.save()
             return redirect("jobapps")
     else:
@@ -68,6 +83,7 @@ def edit_jobapp(request, job_id):
         return redirect("jobapps")
     form = forms.CreateJobapp(request.POST or None, instance=jobapp)
     if form.is_valid():
+        jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
         form.save()
         return redirect("jobapp", job_id=job_id)
     status_types = JOB_STATUS_TYPE.keys()
