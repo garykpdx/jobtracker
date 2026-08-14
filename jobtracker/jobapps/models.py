@@ -30,7 +30,7 @@ class JobApp(models.Model):
     location_type = models.CharField(max_length=10, choices=LOCATION_TYPE)
     job_url = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=50, blank=True)
-    state = models.CharField(max_length=20, blank=True)
+    state = models.CharField(max_length=40, blank=True)
     contractor_name = models.CharField(max_length=100, blank=True)
     job_source = models.CharField(max_length=50, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
