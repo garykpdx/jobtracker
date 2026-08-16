@@ -25,10 +25,10 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'jobapps' %}">Job Apps</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'jobapps' %}">Job List</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'new-job' %}">New App</a>
+                    <a class="nav-link active" href="{% url 'new-job' %}">New Job</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'contractors:contractor_list' %}">Contractors</a>
@@ -38,9 +38,7 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        User
-                    </a>
+                       aria-expanded="false"> {{ request.user.username }} </a>
                     <ul class="dropdown-menu">
                         {% if user.is_superuser %}
                         <li><a class="dropdown-item" href="{% url 'users:register' %}">Register</a></li>
