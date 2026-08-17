@@ -3,6 +3,23 @@ from . import models
 
 
 class CreateJobapp(forms.ModelForm):
+    required_css_class = "required"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["company"].required = True
+        self.fields["title"].required = True
+        self.fields["job_status"].required = True
+        self.fields["job_url"].required = False
+        self.fields["description"].required = True
+        self.fields["job_number"].required = False
+        self.fields["city"].required = False
+        self.fields["state"].required = False
+        self.fields["payrate"].required = False
+        self.fields["location_type"].required = True
+        self.fields["contractor_name"].required = False
+        self.fields["job_source"].required = False
+
     class Meta:
         model = models.JobApp
         fields = [
