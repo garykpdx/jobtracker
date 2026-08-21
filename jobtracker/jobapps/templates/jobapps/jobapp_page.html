@@ -1,124 +1,146 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - {{ jobapp.company }}
 {% endblock %}
 
 {% block content %}
-<div class="container-sm">
-    <div class="row mb-1 text-align-start">
-        <div class="col">
-            <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-success m-3" type="submit">Edit Application</a>
-        </div>
-    </div>
-    <div class="row mb-1 text-align-start">
-        <div class="col">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Title</p>
-        </div>
-        <div class="col">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Company</p>
-        </div>
-        <div class="col-3">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Date</p>
-        </div>
-    </div>
-    <div class="row mb-4 text-align-start">
-        <div class="col text-start">
-            {{ jobapp.title }}
-        </div>
-        <div class="col text-start">
-            {{ jobapp.company }}
-        </div>
-        <div class="col-3 text-start">
-            {{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}
-        </div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-3 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">City / State</p>
-        </div>
-        <div class="col-2 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Number</p>
-        </div>
-        <div class="col-2 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Location</p>
-        </div>
-        <div class="col-5 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Contractor</p>
-        </div>
-    </div>
-    <div class="row mb-4 text-align-start">
-        <div class="col-2 text-start">
-            {{ jobapp.city }}
-        </div>
-        <div class="col-1 text-start">
-            {{ jobapp.state }}
-        </div>
-        <div class="col-2 text-start">
-            {{ jobapp.job_number }}
-        </div>
-        <div class="col-2 text-start">
-            {{ jobapp.location_type }}
-        </div>
-        <div class="col-5 text-start">
-            {{ jobapp.contractor_name }}
-        </div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-3 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Status</p>
-        </div>
-        <div class="col-2 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Pay Rate</p>
-        </div>
-        <div class="col-2 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Source</p>
-        </div>
-        <div class="col-5 my-2 text-start">
-            <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job URL</p>
-        </div>
-    </div>
-    <div class="row mb-4 text-align-start">
-        <div class="col-3 text-start">
-            {{ jobapp.job_status }}
-            <form class="d-flex" method=POST action="{% url 'jobapp' job_id=jobapp.id %}">
-                {% csrf_token %}
-                <select class="form-select m-3" aria-label="Status Update" name="job_status_update">
-                    <option selected></option>
-                    {% for status_type in status_types %}
-                    <option>{{ status_type }}</option>
-                    {% endfor %}
-                </select>
-                <button class="btn btn-outline-success btn-sm m-3" type="submit">
-                    Update
-                </button>
-            </form>
-        </div>
-        <div class="col-2 text-start">
-            {{ jobapp.payrate }}
-        </div>
-        <div class="col-2 text-start">
-            {{ jobapp.job_source }}
-        </div>
-        <div class="col-5 text-start">
-            {% if jobapp.job_url == "" %}
-            <p>None</p>
-            {% else %}
-            <a class="link-success link-offset-1 link-underline-opacity-50"
-               href="{{ jobapp.job_url }}" target="_blank">
-                {{ jobapp.title }} - {{ jobapp.company }}
-            </a>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row mb-4">
-    <div class="col">
-        <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Description</p>
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
 
-        <div class="description-content" style="white-space: pre-wrap;">{{ jobapp.description|safe }}</div>
-    </div>
-</div>
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
 
+    <div class="container-sm job-detail-content">
+        <div class="row mb-1 text-align-start">
+            <div class="col">
+                <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-success m-3" type="submit">Edit Application</a>
+            </div>
+        </div>
+        <div class="row mb-1 text-align-start">
+            <div class="col">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Title</p>
+            </div>
+            <div class="col">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Company</p>
+            </div>
+            <div class="col-3">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Date</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col text-start">
+                {{ jobapp.title }}
+            </div>
+            <div class="col text-start">
+                {{ jobapp.company }}
+            </div>
+            <div class="col-3 text-start">
+                {{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">City / State</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Number</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Location</p>
+            </div>
+            <div class="col-5 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Contractor</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col-2 text-start">
+                {{ jobapp.city }}
+            </div>
+            <div class="col-1 text-start">
+                {{ jobapp.state }}
+            </div>
+            <div class="col-2 text-start">
+                {{ jobapp.job_number }}
+            </div>
+            <div class="col-2 text-start">
+                {{ jobapp.location_type }}
+            </div>
+            <div class="col-5 text-start">
+                {{ jobapp.contractor_name }}
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col-3 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Status</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Pay Rate</p>
+            </div>
+            <div class="col-2 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job Source</p>
+            </div>
+            <div class="col-5 my-2 text-start">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Job URL</p>
+            </div>
+        </div>
+        <div class="row mb-4 text-align-start">
+            <div class="col-3 text-start">
+                {{ jobapp.job_status }}
+                <form class="d-flex" method=POST action="{% url 'jobapp' job_id=jobapp.id %}">
+                    {% csrf_token %}
+                    <select class="form-select m-3" aria-label="Status Update" name="job_status_update">
+                        <option selected></option>
+                        {% for status_type in status_types %}
+                        <option>{{ status_type }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="btn btn-outline-success btn-sm m-3" type="submit">
+                        Update
+                    </button>
+                </form>
+            </div>
+            <div class="col-2 text-start">
+                {{ jobapp.payrate }}
+            </div>
+            <div class="col-2 text-start">
+                {{ jobapp.job_source }}
+            </div>
+            <div class="col-5 text-start">
+                {% if jobapp.job_url == "" %}
+                <p>None</p>
+                {% else %}
+                <a class="link-success link-offset-1 link-underline-opacity-50"
+                   href="{{ jobapp.job_url }}" target="_blank">
+                    {{ jobapp.title }} - {{ jobapp.company }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col">
+                <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded">Description</p>
+                <div class="description-content" style="white-space: pre-wrap;">{{ jobapp.description|safe }}</div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

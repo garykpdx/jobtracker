@@ -1,84 +1,106 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - Job App List
 {% endblock %}
 
 {% block content %}
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
 
-<div class="container m-2">
-    <div class="row p-1">
-        <div class="jobapp col-3 text-start">
-            <h2 class="display-6 text-secondary ms-2"><b>Job Applications</b></h2>
-        </div>
-        <div class="jobapp col text-start">
-            <form class="d-flex" method=POST action="{% url 'search' %}">
-                {% csrf_token %}
-                <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
-                       name="search_terms">
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
+
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+    <div class="container m-2">
+        <div class="row p-1">
+            <div class="jobapp col-3 text-start">
+                <h2 class="display-6 text-secondary ms-2"><b>Job Applications</b></h2>
+            </div>
+            <div class="jobapp col text-start">
+                <form class="d-flex" method=POST action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
+                           name="search_terms">
                     <button class="btn btn-success" type="submit">
-                    Search
-                </button>
-            </form>
+                        Search
+                    </button>
+                </form>
 
+            </div>
         </div>
-    </div>
 
-    <div class="container p-2">
-        <p>Click on job title to view/edit job</p>
-        <table class="table table-light table-striped">
-            <tr>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Date</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Status</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Job Title</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Company</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Location</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Source</p>
-                </td>
-                <td class="jobapp text-start border border-secondary-subtle">
-                    <p class="h4 h4 text-dark">Job No.</p>
-                </td>
-            </tr>
-            {% for jobapp in jobapps %}
-            <tr>
-                <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</td>
+        <div class="container p-2">
+            <table class="table table-light table-striped">
+                <tr>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Date</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Status</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Job Title</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Company</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Location</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Source</p>
+                    </td>
+                    <td class="jobapp text-start border border-secondary-subtle">
+                        <p class="h4 h4 text-dark">Job No.</p>
+                    </td>
+                </tr>
+                {% for jobapp in jobapps %}
+                <tr>
+                    <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</td>
 
-                <td class="jobapp col text-start text-secondary">
+                    <td class="jobapp col text-start text-secondary">
                         <b>{{ jobapp.job_status }}</b>
-                </td>
-                <td class="jobapp col text-start">
-                    <a class="link-success link-offset-1 link-underline-opacity-50"
-                       href="{% url 'jobapp' job_id=jobapp.id %}">
-                        {{ jobapp.title }}
-                    </a>
-                </td>
-                <td class="jobapp text-start">
-                    {{ jobapp.company }}
-                </td>
-                <td class="jobapp text-start">
-                    {{ jobapp.city }} {{ jobapp.state }}
-                </td>
-                <td class="jobapp text-start">
-                    {{ jobapp.job_source }}
-                </td>
-                <td class="jobapp text-start">
-                    {{ jobapp.job_number }}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+                    </td>
+                    <td class="jobapp col text-start">
+                        <a class="link-success link-offset-1 link-underline-opacity-50"
+                           href="{% url 'jobapp' job_id=jobapp.id %}">
+                            {{ jobapp.title }}
+                        </a>
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ jobapp.company }}
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ jobapp.city }} {{ jobapp.state }}
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ jobapp.job_source }}
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ jobapp.job_number }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
+    </div>
 </div>
 {% endblock %}

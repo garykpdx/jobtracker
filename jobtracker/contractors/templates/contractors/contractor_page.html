@@ -1,44 +1,68 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - {{ contractor.name }}
 {% endblock %}
 
 {% block content %}
-<div class="container-sm">
-    <div class="row mb-1 text-align-start">
-        <div class="col">
-            <a href="{% url 'contractors:edit_contractor' contractor.id %}" class="btn btn-success m-3" type="submit">Edit Contractor</a>
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
+
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
+
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+    <div class="container-sm">
+        <div class="row mb-1 text-align-start">
+            <div class="col">
+                <a href="{% url 'contractors:edit_contractor' contractor.id %}" class="btn btn-success m-3"
+                   type="submit">Edit Contractor</a>
+            </div>
         </div>
-    </div>
-    <div class="row mb-1 text-align-start">
-        <div class="col-2">
-            <p class="h4 bg-success text-light">Name</p>
+        <div class="row mb-1 text-align-start">
+            <div class="col-2">
+                <p class="h4 bg-success text-light">Name</p>
+            </div>
+            <div class="col">
+                <p class="h4 bg-success text-light">Company</p>
+            </div>
+            <div class="col-2">
+                <p class="h4 bg-success text-light">Phone</p>
+            </div>
+            <div class="col-3">
+                <p class="h4 bg-success text-light">Email</p>
+            </div>
         </div>
-        <div class="col">
-            <p class="h4 bg-success text-light">Company</p>
-        </div>
-        <div class="col-2">
-            <p class="h4 bg-success text-light">Phone</p>
-        </div>
-        <div class="col-3">
-            <p class="h4 bg-success text-light">Email</p>
-        </div>
-    </div>
-    <div class="row mb-4 text-align-start">
-        <div class="col-2 text-start">
-            {{ contractor.name }}
-        </div>
-        <div class="col text-start">
-            {{ contractor.company }}
-        </div>
-        <div class="col-2 text-start">
-            {{ contractor.phone }}
-        </div>
-        <div class="col-3 text-start">
-            {{ contractor.email }}
+        <div class="row mb-4 text-align-start">
+            <div class="col-2 text-start">
+                {{ contractor.name }}
+            </div>
+            <div class="col text-start">
+                {{ contractor.company }}
+            </div>
+            <div class="col-2 text-start">
+                {{ contractor.phone }}
+            </div>
+            <div class="col-3 text-start">
+                {{ contractor.email }}
+            </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

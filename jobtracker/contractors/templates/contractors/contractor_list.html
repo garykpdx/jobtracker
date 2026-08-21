@@ -1,64 +1,87 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - Contractor List
 {% endblock %}
 
 {% block content %}
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
 
-<div class="container m-2">
-    <div class="row p-1">
-        <div class="jobapp col-2 text-start">
-            <h2 class="display-6 text-secondary ms-2"><b>Contractors</b></h2>
-        </div>
-        <div class="col text-start ms-3">
-            <form class="d-flex" method=POST action="{% url 'contractors:new_contractor' %}">
-                {% csrf_token %}
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
+
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+    <div class="container m-2">
+        <div class="row p-1">
+            <div class="jobapp col-2 text-start">
+                <h2 class="display-6 text-secondary ms-2"><b>Contractors</b></h2>
+            </div>
+            <div class="col text-start ms-3">
+                <form class="d-flex" method=POST action="{% url 'contractors:new_contractor' %}">
+                    {% csrf_token %}
                     <button class="btn btn-success" type="submit">
-                    New Contractor
-                </button>
-            </form>
+                        New Contractor
+                    </button>
+                </form>
 
+            </div>
         </div>
-    </div>
 
-    <div class="container p-2">
-        <table class="table table-light table-striped">
-            <tr>
-                <td class="contractor text-start">
-                    <p class="h4 h4 text-dark">Name</p>
-                </td>
-                <td class="contractor text-start">
-                    <p class="h4 h4 text-dark">Company</p>
-                </td>
-                <td class="contractor text-start">
-                    <p class="h4 h4 text-dark">Phone</p>
-                </td>
-                <td class="contractor text-start">
-                    <p class="h4 h4 text-dark">Email</p>
-                </td>
-            </tr>
-            {% for contractor in contractors %}
-            <tr>
-                <td class="jobapp col text-start">
-                    <a class="link-success link-offset-1 link-underline-opacity-50"
-                       href="{% url 'contractors:contractor_page' contractor.id %}">
-                        {{ contractor.name }}
-                    </a>
-                </td>
-                <td class="jobapp col text-start">
-                    {{ contractor.company }}
-                </td>
-                <td class="jobapp text-start">
-                    {{ contractor.phone }}
-                </td>
-                <td class="jobapp text-start">
-                    {{ contractor.email }}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+        <div class="container p-2">
+            <table class="table table-light table-striped">
+                <tr>
+                    <td class="contractor text-start">
+                        <p class="h4 h4 text-dark">Name</p>
+                    </td>
+                    <td class="contractor text-start">
+                        <p class="h4 h4 text-dark">Company</p>
+                    </td>
+                    <td class="contractor text-start">
+                        <p class="h4 h4 text-dark">Phone</p>
+                    </td>
+                    <td class="contractor text-start">
+                        <p class="h4 h4 text-dark">Email</p>
+                    </td>
+                </tr>
+                {% for contractor in contractors %}
+                <tr>
+                    <td class="jobapp col text-start">
+                        <a class="link-success link-offset-1 link-underline-opacity-50"
+                           href="{% url 'contractors:contractor_page' contractor.id %}">
+                            {{ contractor.name }}
+                        </a>
+                    </td>
+                    <td class="jobapp col text-start">
+                        {{ contractor.company }}
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ contractor.phone }}
+                    </td>
+                    <td class="jobapp text-start">
+                        {{ contractor.email }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
 
+    </div>
 </div>
 {% endblock %}
