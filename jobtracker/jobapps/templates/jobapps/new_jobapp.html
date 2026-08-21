@@ -1,25 +1,48 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - New Job App
 {% endblock %}
 
 {% block content %}
-<div class="container-sm text-bg-light p-3 rounded-5">
-    <div class="row align-items-start">
-        <div class="col mb-3 text-secondary">
-            <h1>New Job Application</h1>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="row align-items-start mb-2">
-            <div class="col-8 m-3 text-top">
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
 
-                <form action="{% url 'new-job' %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-success mt-3">Add Job</button>
-                </form>
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+
+    <div class="container-sm text-bg-light p-3 rounded-5 job-detail-content">
+        <div class="row align-items-start">
+            <div class="col mb-3 text-secondary">
+                <h1>New Job Application</h1>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row align-items-start mb-2">
+                <div class="col-8 m-3 text-top">
+
+                    <form action="{% url 'new-job' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-success mt-3">Add Job</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
