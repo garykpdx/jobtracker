@@ -8,6 +8,13 @@ from . import models
 # app_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
 class ContractorForm(forms.ModelForm):
+    required_css_class = "required"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].required = True
+        self.fields["company"].required = True
+
     class Meta:
         model = models.Contractor
         fields = [
