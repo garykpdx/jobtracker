@@ -1,18 +1,42 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title %}
 Job Lizard - Register User
 {% endblock %}
 
 {% block content %}
-<div class="container-sm text-bg-light p-3 rounded-5">
-    <h1>Register User</h1>
-    <form action="{% url 'users:register' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="container mt-2">
-            <button class="btn btn-light">Submit</button>
-        </div>
-    </form>
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        overflow-x: auto;
+    }
+
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
+
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+    <div class="container-sm text-bg-light p-3 rounded-5">
+        <h1>Register User</h1>
+        <form action="{% url 'users:register' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="container mt-2">
+                <button class="btn btn-light">Submit</button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
