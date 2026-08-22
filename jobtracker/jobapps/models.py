@@ -38,3 +38,9 @@ class JobApp(models.Model):
 
     def __str__(self):
         return f"{self.title}\t{self.company}"
+
+class JobComment(models.Model):
+    text = models.CharField(max_length=30)
+    change_dt = models.DateField(auto_now_add=True)
+    jobapp = models.ForeignKey(JobApp, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
