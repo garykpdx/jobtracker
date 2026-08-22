@@ -13,11 +13,18 @@ Job Lizard - {{ jobapp.company }}
         min-width: 700px;
         overflow-x: auto;
     }
-    .job-detail-logo {
-        width: 200px;
+
+    .job-detail-logo-col {
+        display: flex;
+        flex-direction: column;
         flex-shrink: 0;
         margin: 0 20px;
     }
+
+    .job-detail-logo {
+        width: 200px;
+    }
+
     .job-detail-content {
         flex: 1;
         min-width: 0;
@@ -25,8 +32,44 @@ Job Lizard - {{ jobapp.company }}
 </style>
 
 <div class="job-detail-wrapper">
-    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
-
+    <div class="job-detail-logo-col">
+        <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+        <div class="comments-log mt-2">
+            <table class="table table-sm table-striped table-bordered">
+                <thead class="table-success">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Update</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for comment in job_comments %}
+                <tr>
+                    <td>{{ comment.change_dt|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ comment.text }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'jobapp' job_id=jobapp.id %}" class="d-inline"
+                              onsubmit="return confirm('Delete this comment?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete comment">&times;
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <form method="POST" action="{% url 'jobapp' job_id=jobapp.id %}">
+                {% csrf_token %}
+                <div class="mb-2">
+                    <input type="text" class="form-control form-control-sm" name="comment_text"
+                           placeholder="Add a comment">
+                </div>
+                <button type="submit" class="btn btn-success btn-sm">Add</button>
+            </form>
+        </div>
+    </div>
     <div class="container-sm job-detail-content">
         <div class="row mb-1 text-align-start">
             <div class="col">

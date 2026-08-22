@@ -7,7 +7,13 @@ from django.shortcuts import (
 )
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import JobApp, JOB_STATUS_TYPE
+from django.utils import timezone
+
+from .models import (
+    JobApp,
+    JobComment,
+    JOB_STATUS_TYPE,
+)
 from . import forms
 import bleach
 
@@ -38,7 +44,6 @@ def jobapp_list(request):
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
 
 
-# should convert with int converter for using with job_id unique ID: <int:job_id>
 @login_required(login_url="/users/login/")
 def jobapp_page(request, job_id):
     user = request.user
@@ -46,14 +51,38 @@ def jobapp_page(request, job_id):
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
         return redirect("jobapps")
+
     if jobapp.user != user:
         return redirect("jobapps")
+
+    if request.method == "POST":
+        job_status_update = request.POST.get("job_status_update")
+        if job_status_update:
+            jobapp.job_status = job_status_update
+            jobapp.save()
+
+        comment_text = request.POST.get("comment_text")
+        if comment_text:
+            JobComment.objects.create(
+                user=user,
+                jobapp=jobapp,
+                text=comment_text,
+                change_dt=timezone.now(),
+            )
+
+        delete_comment_id = request.POST.get("delete_comment_id")
+        if delete_comment_id:
+            JobComment.objects.filter(id=delete_comment_id, user=user, jobapp=jobapp).delete()
+
+        return redirect("jobapp", job_id=jobapp.id)
+
     status_types = JOB_STATUS_TYPE.keys()
-    job_status_update = request.POST.get("job_status_update")
-    if job_status_update:
-        jobapp.job_status = job_status_update
-        jobapp.save()
-    return render(request, 'jobapps/jobapp_page.html', {"jobapp": jobapp, "status_types": status_types})
+    job_comments = JobComment.objects.filter(user=user, jobapp=jobapp).order_by("-change_dt", "-id")
+
+    return render(request, 'jobapps/jobapp_page.html',
+                  {"jobapp": jobapp,
+                   "status_types": status_types,
+                   "job_comments": job_comments})
 
 
 @login_required(login_url="/users/login/")
