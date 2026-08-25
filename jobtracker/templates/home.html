@@ -13,15 +13,33 @@ Job Lizard - Main
         min-width: 700px;
         overflow-x: auto;
     }
+
     .job-detail-logo {
         width: 200px;
         flex-shrink: 0;
         margin: 0 20px;
     }
+
     .job-detail-content {
         flex: 1;
         min-width: 0;
     }
+
+    .daily-counts-scroll {
+        max-height: 500px;
+        overflow-y: auto;
+        border: 1px solid #198754;
+        border-radius: 6px;
+        padding: 4px;
+    }
+
+    .daily-counts-header {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 1;
+    }
+
 </style>
 
 <div class="job-detail-wrapper">
@@ -62,52 +80,57 @@ Job Lizard - Main
                 </div>
             </div>
             <div class="row p-1">
-                <div class="jobapp col-2 text-start"><b>Date</b></div>
-                <div class="jobapp col-2 text-start"><b>Number of jobs</b></div>
-                {% for count in daily_counts %}
-                <div class="row p-1">
-                    <div class="jobapp col-2 text-start">
-                        {{ count.applied_dt|date:"SHORT_DATE_FORMAT" }}
+                <div class="col-4">
+                    <div class="row daily-counts-header">
+                        <div class="jobapp col-6 text-start"><b>Date</b></div>
+                        <div class="jobapp col-6 text-start"><b>Number of jobs</b></div>
                     </div>
-                    <div class="jobapp col-1 text-start">
-                        {{ count.date_count }}
+                    <div class="daily-counts-scroll">
+                        {% for count in daily_counts %}
+                        <div class="row">
+                            <div class="jobapp col-6 text-start">
+                                {{ count.applied_dt|date:"D, n/j/Y" }}
+                            </div>
+                            <div class="jobapp col-6 text-start">
+                                {{ count.date_count }}
+                            </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-{% if logged_in %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<script>
-    // Placeholder static data — replace with real values from the view later
-    const statusPieCtx = document.getElementById('statusPieChart').getContext('2d');
-    new Chart(statusPieCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Seattle', 'Paris', 'Hamburg', 'Austin'],
-            datasets: [{
-                data: [12, 6, 5,3],
-                backgroundColor: [
-                    '#0d6efd',
-                    '#ffc107',
-                    '#198754',
-                    '#dc3545'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-</script>
-{% endif %}
+<!--{% if logged_in %}-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>-->
+<!--<script>-->
+<!--    const statusPieCtx = document.getElementById('statusPieChart').getContext('2d');-->
+<!--    new Chart(statusPieCtx, {-->
+<!--        type: 'pie',-->
+<!--        data: {-->
+<!--            labels: ['Seattle', 'Paris', 'Hamburg', 'Austin'],-->
+<!--            datasets: [{-->
+<!--                data: [12, 6, 5, 3],-->
+<!--                backgroundColor: [-->
+<!--                    '#0d6efd',-->
+<!--                    '#ffc107',-->
+<!--                    '#198754',-->
+<!--                    '#dc3545'-->
+<!--                ]-->
+<!--            }]-->
+<!--        },-->
+<!--        options: {-->
+<!--            responsive: true,-->
+<!--            plugins: {-->
+<!--                legend: {-->
+<!--                    position: 'bottom'-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+<!--{% endif %}-->
 
 {% endblock %}
