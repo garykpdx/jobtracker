@@ -12,9 +12,10 @@ class CreateJobapp(forms.ModelForm):
         self.fields["job_status"].required = True
         self.fields["job_url"].required = False
         self.fields["description"].required = True
-        self.fields["job_number"].required = False
+        self.fields["job_id"].required = False
         self.fields["city"].required = False
         self.fields["state"].required = False
+        self.fields["locality"].required = False
         self.fields["payrate"].required = False
         self.fields["location_type"].required = True
         self.fields["contractor_name"].required = False
@@ -27,9 +28,10 @@ class CreateJobapp(forms.ModelForm):
             "title",
             "job_status",
             "description",
-            "job_number",
+            "job_id",
             "city",
             "state",
+            "locality",
             "payrate",
             "location_type",
             "contractor_name",
@@ -42,9 +44,10 @@ class CreateJobapp(forms.ModelForm):
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "job_status": forms.Select(attrs={"class": "form-control form-select"}),
             "description": forms.Textarea(attrs={"class": "form-control"}),
-            "job_number": forms.TextInput(attrs={"class": "form-control"}),
+            "job_id": forms.TextInput(attrs={"class": "form-control"}),
             "city": forms.TextInput(attrs={"class": "form-control"}),
             "state": forms.TextInput(attrs={"class": "form-control"}),
+            "locality": forms.TextInput(attrs={"class": "form-control"}),
             "payrate": forms.TextInput(attrs={"class": "form-control"}),
             "location_type": forms.Select(attrs={"class": "form-control form-select"}),
             "contractor_name": forms.TextInput(attrs={"class": "form-control"}),

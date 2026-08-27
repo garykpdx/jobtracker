@@ -127,7 +127,7 @@ def search_job(request):
         search_terms = request.POST["search_terms"]
         jobapps = (JobApp.objects.filter(Q(description__icontains=search_terms)
                                          | Q(company__icontains=search_terms)
-                                         | Q(job_number__icontains=search_terms))
+                                         | Q(job_id__icontains=search_terms))
                    .order_by("-created_dt"))
         count = len(jobapps)
         return render(request, 'jobapps/search_job.html',
