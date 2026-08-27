@@ -35,10 +35,10 @@ def homepage(request):
 
     try:
         city_counts = (JobApp.objects.filter(applied_dt__range=(week_start, week_end)).filter(user=request.user)
-                        .values("city")
-                        .annotate(count=Count("city"))
+                        .values("locality")
+                        .annotate(count=Count("locality"))
                         .order_by("-count"))
-        city_data = {(entry["city"] or "Unknown"): entry["count"] for entry in city_counts}
+        city_data = {(entry["locality"] or "Unknown"): entry["count"] for entry in city_counts}
     except Exception as e:
         print(e)
         city_data = {}
