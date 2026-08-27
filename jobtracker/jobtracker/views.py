@@ -34,7 +34,7 @@ def homepage(request):
         jobcount_current_week = 0
 
     try:
-        city_counts = (JobApp.objects.filter(user=request.user)
+        city_counts = (JobApp.objects.filter(applied_dt__range=(week_start, week_end)).filter(user=request.user)
                         .values("city")
                         .annotate(count=Count("city"))
                         .order_by("-count"))
