@@ -124,10 +124,11 @@ def edit_jobapp(request, job_id):
 @login_required(login_url="/users/login/")
 def search_job(request):
     if request.method == "POST":
-        search_terms = request.POST["search_terms"]
-        jobapps = (JobApp.objects.filter(Q(description__icontains=search_terms)
-                                         | Q(company__icontains=search_terms)
-                                         | Q(job_id__icontains=search_terms))
+        search_terms = request.POST.get("search_terms", "").strip()
+        jobapps = (JobApp.objects.filter(user=request.user)
+                   .filter(Q(description__icontains=search_terms)
+                           | Q(company__icontains=search_terms)
+                           | Q(job_id__icontains=search_terms))
                    .order_by("-created_dt"))
         count = len(jobapps)
         return render(request, 'jobapps/search_job.html',

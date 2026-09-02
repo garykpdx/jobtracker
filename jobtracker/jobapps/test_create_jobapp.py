@@ -55,11 +55,10 @@ class NewJobAppTests(TestCase):
 
     def test_post_sanitizes_description_with_bleach(self):
         self.client.post(self.url, self.valid_data)
-
         jobapp = JobApp.objects.first()
         self.assertNotIn("<script>", jobapp.description)
-        self.assertNotIn("alert(", jobapp.description)
-        # allowed tag should survive
+        self.assertIn("&lt;script&gt;", jobapp.description)
+        # allowed tag survives untouched
         self.assertIn("<p>", jobapp.description)
 
     def test_post_missing_required_field_does_not_create_jobapp(self):
@@ -84,3 +83,20 @@ class NewJobAppTests(TestCase):
         self.assertTrue(response.context["form"].errors)
         self.assertIn("job_status", response.context["form"].errors)
         self.assertEqual(JobApp.objects.count(), 0)
+
+    def test_post_strips_disallowed_attributes_but_keeps_allowed_tags(self):
+        data = self.valid_data.copy()
+        data["description"] = (
+            '<p onclick="alert(1)">Hello</p>'
+            '<a href="http://example.com" onmouseover="alert(2)">link</a>'
+        )
+
+        self.client.post(self.url, data)
+
+        jobapp = JobApp.objects.first()
+        # disallowed attribute stripped from <p>
+        self.assertNotIn("onclick", jobapp.description)
+        self.assertIn("<p>", jobapp.description)
+        # <a> keeps allowed href, loses disallowed onmouseover
+        self.assertIn('href="http://example.com"', jobapp.description)
+        self.assertNotIn("onmouseover", jobapp.description)

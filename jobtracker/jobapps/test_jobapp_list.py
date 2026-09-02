@@ -84,6 +84,24 @@ class JobAppListTests(TestCase):
 
         self.assertNotIn(other_jobapp, response.context["jobapps"])
 
+    def test_includes_jobapp_applied_exactly_today(self):
+        jobapp = self._create_jobapp(
+            self.user, "applied", self.today
+        )
+
+        response = self.client.get(reverse("jobapps"))
+
+        self.assertIn(jobapp, response.context["jobapps"])
+
+    def test_includes_jobapp_applied_exactly_30_days_ago(self):
+        jobapp = self._create_jobapp(
+            self.user, "applied", self.today - timedelta(days=30)
+        )
+
+        response = self.client.get(reverse("jobapps"))
+
+        self.assertIn(jobapp, response.context["jobapps"])
+
     def test_orders_by_created_dt_descending(self):
         older = self._create_jobapp(
             self.user, "applied", self.today - timedelta(days=5)
