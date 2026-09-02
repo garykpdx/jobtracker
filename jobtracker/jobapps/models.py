@@ -21,7 +21,7 @@ JOB_STATUS_TYPE = {
 
 class JobApp(models.Model):
     title = models.CharField(max_length=255)
-    job_status = models.CharField(max_length=15, default="APPLIED", choices=JOB_STATUS_TYPE)
+    job_status = models.CharField(max_length=15, default="Applied", choices=JOB_STATUS_TYPE)
     description = models.TextField()
     job_id = models.CharField(max_length=30, blank=True)
     company = models.CharField(max_length=100)
