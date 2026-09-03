@@ -79,7 +79,7 @@ Job Lizard - Main
                         {% for count in daily_counts %}
                         <div class="row">
                             <div class="jobapp col-6 text-start">
-                                {{ count.applied_dt|date:"D, n/j/Y" }}
+                                {{ count.local_date|date:"D" }}, {{ count.local_date|date:"SHORT_DATE_FORMAT" }}
                             </div>
                             <div class="jobapp col-6 text-start">
                                 {{ count.date_count }}
