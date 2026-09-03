@@ -33,6 +33,7 @@ Job Lizard - User Profile
         <form action="{% url 'users:profile' %}" method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            {{ profile_form.as_p }}
             <div class="container mt-2">
                 <button class="btn btn-success mt-3">Save</button>
             </div>

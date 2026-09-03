@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load user_time %}
 
 {% block title %}
 Job Lizard - New Job App
@@ -73,7 +74,7 @@ Job Lizard - New Job App
                 </tr>
                 {% for jobapp in jobapps %}
                 <tr>
-                    <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td class="jobapp col-1 text-start">{{ jobapp.applied_dt|user_localtime:request.user|date:"SHORT_DATE_FORMAT" }}</td>
                     <td class="jobapp col text-start text-secondary">
                         <b>{{ jobapp.job_status }}</b>
                     </td>

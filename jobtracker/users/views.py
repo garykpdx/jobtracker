@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponseBadRequest
+from zoneinfo import available_timezones
 from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
@@ -11,7 +15,8 @@ from django.contrib.auth import (
 )
 from django import forms
 
-from users.forms import EditProfileForm
+from users.forms import EditProfileForm, ProfileSettingsForm
+from users.models import UserProfile
 
 class RegisterUserForm(UserCreationForm):
     email = forms.EmailField()
@@ -48,14 +53,42 @@ def register_view(request):
 
 
 def profile_view(request):
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == "POST":
         form = EditProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
+        profile_form = ProfileSettingsForm(request.POST, instance=user_profile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
+            profile_form.save()
     else:
         form = EditProfileForm(instance=request.user)
+        profile_form = ProfileSettingsForm(instance=user_profile)
 
-    return render(request, "users/user_profile.html", {"form": form})
+    return render(request, "users/user_profile.html", {
+        "form": form,
+        "profile_form": profile_form,
+    })
+
+
+@login_required
+@require_POST
+def set_detected_timezone(request):
+    """
+    Auto-set the user's timezone from the browser, but only the first
+    time — never overwrite a timezone the user has already chosen
+    (whether that came from a previous auto-detect or a manual pick).
+    """
+    tz_name = request.POST.get("timezone")
+    if not tz_name or tz_name not in available_timezones():
+        return HttpResponseBadRequest("Invalid timezone")
+
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    if not user_profile.timezone:
+        user_profile.timezone = tz_name
+        user_profile.save(update_fields=["timezone"])
+
+    return JsonResponse({"timezone": str(user_profile.timezone)})
 
 
 
