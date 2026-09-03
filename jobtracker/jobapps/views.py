@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import datetime, time, timedelta
 
 from django.db.models import Q
 from django.shortcuts import (
@@ -35,10 +35,18 @@ ALLOWED_ATTRS = {"a": ["href", "title", "target", "rel"]}
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
     user = request.user
-    today = date.today()
-    start_date = today - timedelta(days=30)
+    user_tz = getattr(getattr(user, "profile", None), "timezone", None) \
+        or timezone.get_default_timezone()
+
+    now_local = timezone.localtime(timezone.now(), timezone=user_tz)
+    today_local = now_local.date()
+    start_date_local = today_local - timedelta(days=30)
+
+    range_start = datetime.combine(start_date_local, time.min, tzinfo=user_tz)
+    range_end = datetime.combine(today_local, time.max, tzinfo=user_tz)
+
     jobapps = (JobApp.objects.filter(user=user)
-               .filter(applied_dt__range=(start_date, today))
+               .filter(applied_dt__range=(range_start, range_end))
                .filter(~Q(job_status__iexact="Closed"))
                .order_by("-created_dt"))
     return render(request, 'jobapps/jobapp_list.html', {"jobapps": jobapps})
