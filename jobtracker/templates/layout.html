@@ -208,6 +208,26 @@
     {% block content %}
     {% endblock %}
 </main>
+{% if request.user.is_authenticated and not request.user.profile.timezone %}
+<script>
+    (function () {
+        function getCookie(name) {
+            const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return match ? match.pop() : '';
+        }
 
+        const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        fetch("{% url 'users:set-timezone' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: "timezone=" + encodeURIComponent(detectedTimezone),
+        });
+    })();
+</script>
+{% endif %}
 </body>
 </html>

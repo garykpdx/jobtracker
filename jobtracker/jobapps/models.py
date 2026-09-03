@@ -25,7 +25,7 @@ class JobApp(models.Model):
     description = models.TextField()
     job_id = models.CharField(max_length=30, blank=True)
     company = models.CharField(max_length=100)
-    applied_dt = models.DateField(auto_now_add=True)
+    applied_dt = models.DateTimeField(auto_now_add=True)
     payrate = models.CharField(max_length=20, blank=True)
     location_type = models.CharField(max_length=10, choices=LOCATION_TYPE)
     job_url = models.CharField(max_length=255, blank=True)
@@ -42,6 +42,6 @@ class JobApp(models.Model):
 
 class JobComment(models.Model):
     text = models.CharField(max_length=30)
-    change_dt = models.DateField(auto_now_add=True)
+    change_dt = models.DateTimeField(auto_now_add=True)
     jobapp = models.ForeignKey(JobApp, on_delete=models.CASCADE, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)

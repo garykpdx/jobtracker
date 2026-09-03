@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load user_time %}
 
 {% block title %}
 Job Lizard - {{ jobapp.company }}
@@ -45,7 +46,7 @@ Job Lizard - {{ jobapp.company }}
                 <tbody>
                 {% for comment in job_comments %}
                 <tr>
-                    <td>{{ comment.change_dt|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ comment.change_dt|user_localtime:request.user|date:"SHORT_DATE_FORMAT" }}</td>
                     <td>{{ comment.text }}</td>
                     <td>
                         <form method="POST" action="{% url 'jobapp' job_id=jobapp.id %}" class="d-inline"
@@ -95,7 +96,7 @@ Job Lizard - {{ jobapp.company }}
                 {{ jobapp.company }}
             </div>
             <div class="col-3 text-start">
-                {{ jobapp.applied_dt|date:"SHORT_DATE_FORMAT" }}
+                {{ jobapp.applied_dt|user_localtime:request.user|date:"SHORT_DATE_FORMAT" }}
             </div>
         </div>
         <div class="row mb-1">
