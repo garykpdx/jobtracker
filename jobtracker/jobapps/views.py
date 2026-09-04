@@ -64,12 +64,12 @@ def jobapp_page(request, job_id):
         return redirect("jobapps")
 
     if request.method == "POST":
-        job_status_update = request.POST.get("job_status_update")
+        job_status_update = request.POST.get("job_status_update", "").strip()
         if job_status_update:
             jobapp.job_status = job_status_update
             jobapp.save()
 
-        comment_text = request.POST.get("comment_text")
+        comment_text = request.POST.get("comment_text", "").strip()
         if comment_text:
             JobComment.objects.create(
                 user=user,
