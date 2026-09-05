@@ -17,7 +17,6 @@ from .models import (
 from . import forms
 import bleach
 
-
 ALLOWED_TAGS = [
     "p", "br", "strong", "em", "b", "i", "u", "ul", "ol", "li", "a",
     "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "hr",
@@ -36,7 +35,7 @@ ALLOWED_ATTRS = {"a": ["href", "title", "target", "rel"]}
 def jobapp_list(request):
     user = request.user
     user_tz = getattr(getattr(user, "profile", None), "timezone", None) \
-        or timezone.get_default_timezone()
+              or timezone.get_default_timezone()
 
     now_local = timezone.localtime(timezone.now(), timezone=user_tz)
     today_local = now_local.date()
@@ -127,6 +126,25 @@ def edit_jobapp(request, job_id):
 
     return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "form": form,
                                                         "status_types": status_types})
+
+
+@login_required(login_url="/users/login/")
+def delete_jobapp(request, job_id):
+    user = request.user
+    try:
+        jobapp = JobApp.objects.filter(user=user).get(id=job_id)
+    except JobApp.DoesNotExist:
+        return redirect("jobapps")
+
+    if jobapp.user != user:
+        return redirect("jobapps")
+
+    if request.method == "POST":
+        jobapp.delete()
+        return redirect("jobapps")
+
+    # If someone GETs this URL directly, just send them back to the detail page
+    return redirect("jobapp", job_id=jobapp.id)
 
 
 @login_required(login_url="/users/login/")
