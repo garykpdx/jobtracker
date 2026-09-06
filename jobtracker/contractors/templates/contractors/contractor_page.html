@@ -30,9 +30,14 @@ Job Lizard - {{ contractor.name }}
     <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
     <div class="container-sm">
         <div class="row mb-1 text-align-start">
-            <div class="col">
+            <div class="col d-flex align-items-center">
                 <a href="{% url 'contractors:edit_contractor' contractor.id %}" class="btn btn-success m-3"
                    type="submit">Edit Contractor</a>
+                <form method="POST" action="{% url 'contractors:delete_contractor' contractor_id=contractor.id %}"
+                      onsubmit="return confirm('Are you sure you want to delete this contractor? This cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger m-3">Delete Contractor</button>
+                </form>
             </div>
         </div>
         <div class="row mb-1 text-align-start">
