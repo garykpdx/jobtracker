@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from .models import JobApp, JobComment
+from jobapps.models import JobApp, JobComment
 
 User = get_user_model()
 
