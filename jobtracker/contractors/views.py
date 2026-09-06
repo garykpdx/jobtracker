@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Contractor
 from . import forms
 
+
 # Create your views here.
 
 @login_required(login_url="/users/login/")
@@ -46,6 +47,25 @@ def edit_contractor(request, contractor_id):
 
     return render(request, 'contractors/edit_contractor.html', {"contractor": contractor,
                                                                 "form": form, "username": user})
+
+
+@login_required(login_url="/users/login/")
+def delete_contractor(request, contractor_id):
+    user = request.user
+    try:
+        contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
+    except Contractor.DoesNotExist:
+        return redirect("contractors:contractor_list")
+
+    if contractor.app_user != user:
+        return redirect("contractors:contractor_list")
+
+    if request.method == "POST":
+        contractor.delete()
+        return redirect("contractors:contractor_list")
+
+    # GET request: don't delete, just send back to the detail page
+    return redirect("contractors:contractor_page", contractor_id=contractor.id)
 
 
 @login_required(login_url="/users/login/")

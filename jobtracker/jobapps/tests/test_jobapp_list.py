@@ -1,13 +1,18 @@
 from datetime import datetime, time, timedelta
+from zoneinfo import ZoneInfo
 
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from .models import JobApp
+from jobapps.models import JobApp
+from users.models import UserProfile
 
 User = get_user_model()
+
+# arbitrary but explicit, unrelated to server TIME_ZONE
+TEST_TZ = ZoneInfo("America/Chicago")
 
 
 class JobAppListTests(TestCase):
@@ -15,15 +20,16 @@ class JobAppListTests(TestCase):
         self.user = User.objects.create_user(
             username="testuser", password="testpass123"
         )
+
+        UserProfile.objects.create(user=self.user, timezone=TEST_TZ)
+
         self.client.login(username="testuser", password="testpass123")
+
         self.now = timezone.now()
-        self.today = self.now.date()
+        # "today" according to the user browser
+        self.today = timezone.localtime(self.now, TEST_TZ).date()
 
     def _create_jobapp(self, user, job_status, applied_dt):
-        """
-        Create a JobApp and force applied_dt to the given timezone-aware
-        datetime, bypassing auto_now_add.
-        """
         jobapp = JobApp.objects.create(user=user, job_status=job_status)
         JobApp.objects.filter(id=jobapp.id).update(applied_dt=applied_dt)
         jobapp.refresh_from_db()
@@ -87,7 +93,9 @@ class JobAppListTests(TestCase):
         self.assertNotIn(other_jobapp, response.context["jobapps"])
 
     def test_includes_jobapp_applied_exactly_today(self):
-        start_of_today = timezone.make_aware(datetime.combine(self.today, time.min))
+        start_of_today = timezone.make_aware(
+            datetime.combine(self.today, time.min), TEST_TZ
+        )
         jobapp = self._create_jobapp(self.user, "applied", start_of_today)
 
         response = self.client.get(reverse("jobapps"))
@@ -96,7 +104,9 @@ class JobAppListTests(TestCase):
 
     def test_includes_jobapp_applied_exactly_30_days_ago(self):
         thirty_days_ago = self.today - timedelta(days=30)
-        end_of_that_day = timezone.make_aware(datetime.combine(thirty_days_ago, time.max))
+        end_of_that_day = timezone.make_aware(
+            datetime.combine(thirty_days_ago, time.max), TEST_TZ
+        )
         jobapp = self._create_jobapp(self.user, "applied", end_of_that_day)
 
         response = self.client.get(reverse("jobapps"))
