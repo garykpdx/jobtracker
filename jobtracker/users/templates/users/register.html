@@ -28,7 +28,7 @@ Job Lizard - Register User
 
 <div class="job-detail-wrapper">
     <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
-    <div class="container-sm text-bg-light p-3 rounded-5">
+    <div class="container-fluid text-bg-light p-3 rounded-5">
         <h1>Register User</h1>
         <form action="{% url 'users:register' %}" method="post">
             {% csrf_token %}
