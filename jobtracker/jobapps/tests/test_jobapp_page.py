@@ -63,3 +63,7 @@ class JobAppPageHappyPathTests(TestCase):
                 jobapp=self.jobapp, text="Had a great first call"
             ).exists()
         )
+
+    def test_jobapp_page_returns_redirect_when_not_found(self):
+        response = self.client.get(reverse("jobapp", args=[9999]))  # nonexistent id
+        self.assertRedirects(response, reverse("jobapps"))
