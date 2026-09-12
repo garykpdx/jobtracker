@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, time, timedelta
 
 from django.db.models import Q
@@ -16,6 +17,8 @@ from .models import (
 )
 from . import forms
 import bleach
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_TAGS = [
     "p", "br", "strong", "em", "b", "i", "u", "ul", "ol", "li", "a",
@@ -57,16 +60,30 @@ def jobapp_page(request, job_id):
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
+        logger.warning("JobApp id=%s not found for user=%s", job_id, user.username)
         return redirect("jobapps")
 
     if jobapp.user != user:
+        logger.warning(
+            "User=%s attempted to access JobApp id=%s owned by user=%s",
+            user.username, job_id, jobapp.user.username,
+        )
         return redirect("jobapps")
 
     if request.method == "POST":
         job_status_update = request.POST.get("job_status_update", "").strip()
         if job_status_update:
+            if job_status_update not in JOB_STATUS_TYPE:
+                logger.warning(
+                    "User=%s submitted unrecognized job_status=%r for JobApp id=%s",
+                    user.username, job_status_update, jobapp.id,
+                )
             jobapp.job_status = job_status_update
             jobapp.save()
+            logger.info(
+                "User=%s updated status of JobApp id=%s to %r",
+                user.username, jobapp.id, job_status_update,
+            )
 
         comment_text = request.POST.get("comment_text", "").strip()
         if comment_text:
@@ -76,10 +93,23 @@ def jobapp_page(request, job_id):
                 text=comment_text,
                 change_dt=timezone.now(),
             )
+            logger.info("User=%s added comment to JobApp id=%s", user.username, jobapp.id)
 
         delete_comment_id = request.POST.get("delete_comment_id")
         if delete_comment_id:
-            JobComment.objects.filter(id=delete_comment_id, user=user, jobapp=jobapp).delete()
+            deleted_count, _ = JobComment.objects.filter(
+                id=delete_comment_id, user=user, jobapp=jobapp
+            ).delete()
+            if deleted_count == 0:
+                logger.warning(
+                    "User=%s attempted to delete nonexistent/unauthorized comment id=%s on JobApp id=%s",
+                    user.username, delete_comment_id, jobapp.id,
+                )
+            else:
+                logger.info(
+                    "User=%s deleted comment id=%s on JobApp id=%s",
+                    user.username, delete_comment_id, jobapp.id,
+                )
 
         return redirect("jobapp", job_id=jobapp.id)
 
@@ -102,7 +132,14 @@ def new_jobapp(request):
             jobapp.user = request.user
             jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
             jobapp.save()
+            logger.info("User=%s created new JobApp id=%s (%s at %s)",
+                        request.user.username, jobapp.id, jobapp.title, jobapp.company)
             return redirect("jobapps")
+        else:
+            logger.warning(
+                "User=%s submitted invalid new-jobapp form errors=%s",
+                request.user.username, form.errors.as_json(),
+            )
     else:
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
@@ -114,14 +151,26 @@ def edit_jobapp(request, job_id):
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
+        logger.warning("User=%s attempted to edit nonexistent JobApp id=%s", user.username, job_id)
         return redirect("jobapps")
     if jobapp.user != user:
+        logger.warning(
+            "User=%s attempted to edit JobApp id=%s owned by user=%s",
+            user.username, job_id, jobapp.user.username,
+        )
         return redirect("jobapps")
     form = forms.CreateJobapp(request.POST or None, instance=jobapp)
-    if form.is_valid():
-        jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
-        form.save()
-        return redirect("jobapp", job_id=job_id)
+    if request.method == "POST":
+        if form.is_valid():
+            jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
+            form.save()
+            logger.info("User=%s edited JobApp id=%s", user.username, jobapp.id)
+            return redirect("jobapp", job_id=job_id)
+        else:
+            logger.warning(
+                "User=%s submitted invalid edit form for JobApp id=%s errors=%s",
+                user.username, jobapp.id, form.errors.as_json(),
+            )
     status_types = JOB_STATUS_TYPE.keys()
 
     return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "form": form,
@@ -134,12 +183,19 @@ def delete_jobapp(request, job_id):
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
+        logger.warning("User=%s attempted to delete nonexistent JobApp id=%s", user.username, job_id)
         return redirect("jobapps")
 
     if jobapp.user != user:
+        logger.warning(
+            "User=%s attempted to delete JobApp id=%s owned by user=%s",
+            user.username, job_id, jobapp.user.username,
+        )
         return redirect("jobapps")
 
     if request.method == "POST":
+        logger.info("User=%s deleted JobApp id=%s (%s at %s)",
+                    user.username, jobapp.id, jobapp.title, jobapp.company)
         jobapp.delete()
         return redirect("jobapps")
 
@@ -157,6 +213,11 @@ def search_job(request):
                            | Q(job_id__icontains=search_terms))
                    .order_by("-created_dt"))
         count = len(jobapps)
+        if count == 0:
+            logger.info(
+                "User=%s search for %r returned no results",
+                request.user.username, search_terms,
+            )
         return render(request, 'jobapps/search_job.html',
                       {"jobapps": jobapps, "count": count, "search_terms": search_terms})
 
