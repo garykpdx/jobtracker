@@ -1,11 +1,9 @@
 # Use the official Python image from the Docker Hub
 FROM python:3.11-alpine
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set work directory for build steps
 WORKDIR /jobtracker
 
 # Install dependencies
@@ -16,13 +14,11 @@ RUN pip install -r requirements.txt
 # Copy project files to the container
 COPY . .
 
-# Switch to the folder that actually contains manage.py
 WORKDIR /jobtracker/jobtracker
 
-# Collect static files
-RUN mkdir -p static
+# Collect static files at build time
+RUN python manage.py collectstatic --noinput
 
-# Expose the port that the app runs on
 EXPOSE 8000
 
 # Run migrations, then start gunicorn
