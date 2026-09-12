@@ -26,4 +26,4 @@ RUN mkdir -p static
 EXPOSE 8000
 
 # Run migrations, then start gunicorn
-CMD ["sh", "-c", "cd /jobtracker/jobtracker && python manage.py migrate && gunicorn jobtracker.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "cd /jobtracker/jobtracker && python manage.py migrate && python manage.py create_admin && gunicorn jobtracker.wsgi:application --bind 0.0.0.0:8000"]
