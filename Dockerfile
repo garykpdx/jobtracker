@@ -16,6 +16,8 @@ COPY . .
 
 WORKDIR /jobtracker/jobtracker
 
+ARG SECRET_KEY=build-time-placeholder-key
+ENV SECRET_KEY=$SECRET_KEY
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
