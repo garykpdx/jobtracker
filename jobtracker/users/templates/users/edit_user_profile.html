@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+Job Lizard - User Profile
+{% endblock %}
+
+{% block content %}
+<style>
+    .job-detail-wrapper {
+        display: flex;
+        align-items: flex-start;
+        min-width: 700px;
+        max-width: 900px;
+        overflow-x: auto;
+    }
+
+    .job-detail-logo {
+        width: 200px;
+        flex-shrink: 0;
+        margin: 0 20px;
+    }
+
+    .job-detail-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .password-form .helptext,
+    .password-form ul {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+</style>
+
+<div class="job-detail-wrapper">
+    <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
+    <div class="container m-2 text-bg-light p-3 rounded-5">
+        <h1 class="text-secondary">Profile for {{ request.user.username }}</h1>
+
+        <form action="{% url 'users:editprofile' %}" method="post">
+            {% csrf_token %}
+            <p>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </p>
+            <div class="row">
+                <div class="col">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+                <div class="col">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+            </div>
+            {{ profile_form.as_p }}
+            <div class="container mt-2">
+                <button class="btn btn-success mt-3" type="submit" name="profile_submit">Save</button>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        <h2 class="text-secondary h4">Change Password</h2>
+        <form action="{% url 'users:editprofile' %}" method="post" class="password-form">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <div class="container mt-2">
+                <button class="btn btn-success mt-3" type="submit" name="password_submit">Change Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

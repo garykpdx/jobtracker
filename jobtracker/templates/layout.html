@@ -198,7 +198,9 @@
                         User
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{% url 'users:register' %}">Register</a></li>
+                        {% if user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'users:register' %}">Register</a></li>
+                        {%  endif %}
                         <li>
                             <hr class="dropdown-divider">
                         </li>
