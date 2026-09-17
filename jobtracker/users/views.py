@@ -181,6 +181,7 @@ def login_view(request):
 
 def logout_view(request):
     if request.method == "POST":
-        logger.info("User logged out: %s", request.user.username if request.user.is_authenticated else "anonymous")
+        username = request.user.username if request.user.is_authenticated else "anonymous"
         logout(request)
-    return render(request, "users/login.html")
+        logger.info("User logged out: %s", username)
+    return redirect("users:login")
