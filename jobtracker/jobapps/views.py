@@ -5,7 +5,7 @@ from django.shortcuts import (
     render,
     redirect,
 )
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
@@ -106,6 +106,26 @@ def new_jobapp(request):
     else:
         form = forms.CreateJobapp()
     return render(request, 'jobapps/new_jobapp.html', {"form": form})
+
+
+@login_required(login_url="/users/login/")
+def company_suggestions(request):
+    """
+    Returns up to 4 distinct company names this user has already applied to,
+    matching the partial text they've typed so far. Used to warn the user
+    they may be about to enter a duplicate application before they submit.
+    """
+    query = request.GET.get("q", "").strip()
+
+    if len(query) < 3:
+        return JsonResponse({"companies": []})
+
+    companies = (JobApp.objects.filter(user=request.user, company__icontains=query)
+                 .order_by("company")
+                 .values_list("company", flat=True)
+                 .distinct()[:4])
+
+    return JsonResponse({"companies": list(companies)})
 
 
 @login_required(login_url="/users/login/")

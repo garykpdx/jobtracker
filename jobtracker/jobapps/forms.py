@@ -40,7 +40,7 @@ class CreateJobapp(forms.ModelForm):
         ]
 
         widgets = {
-            "company": forms.TextInput(attrs={"class": "form-control"}),
+            "company": forms.TextInput(attrs={"class": "form-control", "autocomplete": "off"}),
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "job_status": forms.Select(attrs={"class": "form-control form-select"}),
             "description": forms.Textarea(attrs={"class": "form-control",
