@@ -72,8 +72,30 @@ def homepage(request):
         print(e)
         city_data = {}
 
+    # Weekly counts for the last 4 weeks (including the current week), oldest to newest,
+    # using the same Sunday-start week boundaries as jobcount_current_week above.
+    try:
+        weekly_counts = {}
+        for weeks_ago in range(3, -1, -1):
+            w_start_local = week_start_local - timedelta(weeks=weeks_ago)
+            w_end_local = w_start_local + timedelta(days=6)
+
+            w_range_start = datetime.combine(w_start_local, time.min, tzinfo=user_tz)
+            w_range_end = datetime.combine(w_end_local, time.max, tzinfo=user_tz)
+
+            week_count = (JobApp.objects.filter(user=request.user)
+                          .filter(applied_dt__range=(w_range_start, w_range_end))
+                          .count())
+
+            label = f"{w_start_local.strftime('%b %d')} - {w_end_local.strftime('%b %d')}"
+            weekly_counts[label] = week_count
+    except Exception as e:
+        print(e)
+        weekly_counts = {}
+
     return render(request, 'home.html', {'jobcount_30_days': jobcount_30_days,
                                           'jobcount_current_week': jobcount_current_week,
                                           'daily_counts': count_by_date,
                                           'city_data': city_data,
+                                          'weekly_counts': weekly_counts,
                                           'logged_in': logged_in, 'username': username})
