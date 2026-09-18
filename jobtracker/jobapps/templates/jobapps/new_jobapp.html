@@ -22,6 +22,15 @@ Job Lizard - New Job App
         flex: 1;
         min-width: 0;
     }
+    #company-duplicate-warning {
+        margin-top: -0.5rem;
+        margin-bottom: 1rem;
+        min-height: 1.25rem;
+        visibility: hidden;
+    }
+    #company-duplicate-warning.has-suggestions {
+        visibility: visible;
+    }
 </style>
 
 <div class="job-detail-wrapper">
@@ -48,4 +57,67 @@ Job Lizard - New Job App
     </div>
 </div>
 
+<script>
+    (function () {
+        const companyInput = document.getElementById("id_company");
+        if (!companyInput) return;
+
+        // Turn off the browser's own autofill dropdown for this field so it
+        // doesn't get confused with (or cover up) our suggestion box below.
+        companyInput.setAttribute("autocomplete", "off");
+
+        // Build the suggestion box and drop it in right after the field's
+        // wrapping <p> (from form.as_p), so no template restructuring is needed.
+        // It always occupies its reserved height (see CSS), so Title never
+        // shifts up/down depending on whether a suggestion is showing.
+        const warningBox = document.createElement("div");
+        warningBox.id = "company-duplicate-warning";
+        warningBox.innerHTML = '<small class="text-primary">' +
+            '<span id="company-duplicate-list"></span></small>';
+
+        const wrappingParagraph = companyInput.closest("p") || companyInput.parentElement;
+        wrappingParagraph.insertAdjacentElement("afterend", warningBox);
+
+        const warningList = document.getElementById("company-duplicate-list");
+
+        let debounceTimer = null;
+
+        function clearSuggestions() {
+            warningBox.classList.remove("has-suggestions");
+            warningList.textContent = "";
+        }
+
+        function fetchSuggestions(query) {
+            fetch("{% url 'company-suggestions' %}?q=" + encodeURIComponent(query), {
+                method: "GET",
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.companies && data.companies.length > 0) {
+                        warningList.textContent = data.companies.join(", ");
+                        warningBox.classList.add("has-suggestions");
+                    } else {
+                        clearSuggestions();
+                    }
+                })
+                .catch(() => clearSuggestions());
+        }
+
+        companyInput.addEventListener("input", function () {
+            const value = companyInput.value.trim();
+
+            clearTimeout(debounceTimer);
+            clearSuggestions();
+
+            if (value.length < 3) {
+                return;
+            }
+
+            debounceTimer = setTimeout(function () {
+                fetchSuggestions(value);
+            }, 1000);
+        });
+    })();
+</script>
 {% endblock %}
