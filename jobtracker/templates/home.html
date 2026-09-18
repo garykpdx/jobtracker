@@ -46,6 +46,15 @@ Job Lizard - Main
         align-items: center;
         justify-content: flex-start
     }
+
+    .chart-block {
+        width: 100%;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+    }
 </style>
 
 <div class="job-detail-wrapper">
@@ -90,8 +99,18 @@ Job Lizard - Main
                 </div>
 
                 <div class="col-8 pie-chart-col">
-                    <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded w-100 text-center">Apps By Locality Current Week</p>
-                    <canvas id="statusPieChart"></canvas>
+                    <div class="chart-block mb-3">
+                        <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded w-100 text-center">Apps By Locality Current Week</p>
+                        <div class="chart-container" style="height: 380px;">
+                            <canvas id="statusPieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-block" style="max-width: 500px;">
+                        <p class="h4 bg-success bg-opacity-10 text-success px-2 py-1 rounded w-100 text-center">Weekly Application Count</p>
+                        <div class="chart-container" style="height: 150px;">
+                            <canvas id="weeklyBarChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
             {% endif %}
@@ -101,6 +120,7 @@ Job Lizard - Main
 
 {% if logged_in %}
 {{ city_data|json_script:"city-data-json" }}
+{{ weekly_counts|json_script:"weekly-counts-json" }}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -126,8 +146,44 @@ Job Lizard - Main
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: { position: 'right' }
+                }
+            }
+        });
+    }
+
+    // weekly_counts is expected to be a dict like:
+    // {"Aug 25 - Aug 31": 4, "Sep 1 - Sep 7": 6, "Sep 8 - Sep 14": 3, "Sep 15 - Sep 21": 5}
+    // with weeks in chronological order (oldest to newest).
+    const weeklyCounts = JSON.parse(document.getElementById('weekly-counts-json').textContent);
+
+    const weeklyLabels = Object.keys(weeklyCounts);
+    const weeklyValues = Object.values(weeklyCounts);
+
+    if (weeklyLabels.length > 0) {
+        new Chart(document.getElementById('weeklyBarChart'), {
+            type: 'bar',
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: 'Applications',
+                    data: weeklyValues,
+                    backgroundColor: '#198754'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0 }
+                    }
                 }
             }
         });
