@@ -40,6 +40,13 @@ class JobApp(models.Model):
     def __str__(self):
         return f"{self.title}\t{self.company}"
 
+    @property
+    def public_id(self):
+        """Hashid-encoded version of this JobApp's primary key, safe to expose in URLs."""
+        from .hashid_utils import encode_id
+        return encode_id(self.id)
+
+
 class JobComment(models.Model):
     text = models.CharField(max_length=30)
     change_dt = models.DateTimeField(auto_now_add=True)

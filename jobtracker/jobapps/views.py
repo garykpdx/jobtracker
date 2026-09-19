@@ -9,6 +9,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
+from .hashid_utils import decode_id, encode_id
 from .models import (
     JobApp,
     JobComment,
@@ -46,8 +47,12 @@ def jobapp_list(request):
 
 
 @login_required(login_url="/users/login/")
-def jobapp_page(request, job_id):
+def jobapp_page(request, job_hash):
     user = request.user
+    job_id = decode_id(job_hash)
+    if job_id is None:
+        return redirect("jobapps")
+
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
@@ -77,7 +82,7 @@ def jobapp_page(request, job_id):
         if delete_comment_id:
             JobComment.objects.filter(id=delete_comment_id, user=user, jobapp=jobapp).delete()
 
-        return redirect("jobapp", job_id=jobapp.id)
+        return redirect("jobapp", job_hash=encode_id(jobapp.id))
 
     status_types = JOB_STATUS_TYPE.keys()
     job_comments = JobComment.objects.filter(user=user, jobapp=jobapp).order_by("-change_dt", "-id")
@@ -125,8 +130,12 @@ def company_suggestions(request):
 
 
 @login_required(login_url="/users/login/")
-def edit_jobapp(request, job_id):
+def edit_jobapp(request, job_hash):
     user = request.user
+    job_id = decode_id(job_hash)
+    if job_id is None:
+        return redirect("jobapps")
+
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
@@ -137,7 +146,7 @@ def edit_jobapp(request, job_id):
     if form.is_valid():
         jobapp.description = bleach.clean(jobapp.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)
         form.save()
-        return redirect("jobapp", job_id=job_id)
+        return redirect("jobapp", job_hash=encode_id(job_id))
     status_types = JOB_STATUS_TYPE.keys()
 
     return render(request, 'jobapps/edit_jobapp.html', {"jobapp": jobapp, "form": form,
@@ -145,8 +154,12 @@ def edit_jobapp(request, job_id):
 
 
 @login_required(login_url="/users/login/")
-def delete_jobapp(request, job_id):
+def delete_jobapp(request, job_hash):
     user = request.user
+    job_id = decode_id(job_hash)
+    if job_id is None:
+        return redirect("jobapps")
+
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
@@ -161,7 +174,7 @@ def delete_jobapp(request, job_id):
         return redirect("jobapps")
 
     # If someone GETs this URL directly, just send them back to the detail page
-    return redirect("jobapp", job_id=jobapp.id)
+    return redirect("jobapp", job_hash=encode_id(jobapp.id))
 
 
 @login_required(login_url="/users/login/")

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from jobapps.models import JobApp
+from jobapps.hashid_utils import encode_id
 
 User = get_user_model()
 
@@ -37,7 +38,8 @@ class EditJobappTests(TestCase):
         )
 
     def _url(self, job_id):
-        return reverse("edit-job", kwargs={"job_id": job_id})
+        # job_id is a raw pk here; the URL itself now needs the encoded hash.
+        return reverse("edit-job", kwargs={"job_hash": encode_id(job_id)})
 
     def test_requires_login(self):
         self.client.logout()
@@ -74,7 +76,7 @@ class EditJobappTests(TestCase):
         response = self.client.post(self._url(self.jobapp.id), data)
 
         self.assertRedirects(
-            response, reverse("jobapp", kwargs={"job_id": self.jobapp.id})
+            response, reverse("jobapp", kwargs={"job_hash": self.jobapp.public_id})
         )
 
         self.jobapp.refresh_from_db()
