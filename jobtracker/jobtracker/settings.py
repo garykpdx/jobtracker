@@ -16,6 +16,34 @@ from pathlib import Path
 import django.middleware.locale
 import environ
 
+import sys
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime}:{filename}:{funcName}:{levelname}:{name}:{message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "stream": sys.stdout,
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "INFO"},
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+        "jobapps": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "users": {"handlers": ["console"], "level": "INFO", "propagate": False},
+    },
+}
+
+
 sqlite3.enable_callback_tracebacks(True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

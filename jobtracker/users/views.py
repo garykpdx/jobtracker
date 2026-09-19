@@ -166,6 +166,7 @@ def login_view(request):
             login(request, form.get_user())
             logger.info("User logged in: %s", form.get_user().username)
             if "next" in request.POST:
+                logger.info("Redirecting to next URL: %s", request.POST.get("next"))
                 return redirect(request.POST.get("next"))
             return redirect("jobapps")
         else:

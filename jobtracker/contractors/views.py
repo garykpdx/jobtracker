@@ -1,13 +1,15 @@
+import logging
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import (
     render,
     redirect,
 )
-from django.contrib.auth.decorators import login_required
-from .models import Contractor
+
 from . import forms
+from .models import Contractor
 
-
-# Create your views here.
+logger = logging.getLogger(__name__)
 
 @login_required(login_url="/users/login/")
 def contractors_list(request):
@@ -22,9 +24,11 @@ def contractor_page(request, contractor_id):
     try:
         contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
     except Contractor.DoesNotExist:
+        logger.warning("Contractor {} does not exist for user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
 
     if contractor.app_user != user:
+        logger.warning("Contractor {} is not owned by user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
 
     return render(request, 'contractors/contractor_page.html', {"contractor": contractor})
@@ -36,8 +40,10 @@ def edit_contractor(request, contractor_id):
     try:
         contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
     except Contractor.DoesNotExist:
+        logger.warning("Contractor {} does not exist for user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
     if contractor.app_user != user:
+        logger.warning("Contractor {} is not owned by user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
 
     form = forms.ContractorForm(request.POST or None, instance=contractor)
@@ -55,9 +61,11 @@ def delete_contractor(request, contractor_id):
     try:
         contractor = Contractor.objects.filter(app_user=user).get(id=contractor_id)
     except Contractor.DoesNotExist:
+        logger.warning("Contractor {} does not exist for user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
 
     if contractor.app_user != user:
+        logger.warning("Contractor {} is not owned by user {}".format(contractor_id, user))
         return redirect("contractors:contractor_list")
 
     if request.method == "POST":
