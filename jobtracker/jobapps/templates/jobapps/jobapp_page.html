@@ -49,7 +49,7 @@ Job Lizard - {{ jobapp.company }}
                     <td>{{ comment.change_dt|user_localtime:request.user|date:"SHORT_DATE_FORMAT" }}</td>
                     <td>{{ comment.text }}</td>
                     <td>
-                        <form method="POST" action="{% url 'jobapp' job_id=jobapp.id %}" class="d-inline"
+                        <form method="POST" action="{% url 'jobapp' job_hash=jobapp.public_id %}" class="d-inline"
                               onsubmit="return confirm('Delete this comment?');">
                             {% csrf_token %}
                             <input type="hidden" name="delete_comment_id" value="{{ comment.id }}">
@@ -61,7 +61,7 @@ Job Lizard - {{ jobapp.company }}
                 {% endfor %}
                 </tbody>
             </table>
-            <form method="POST" action="{% url 'jobapp' job_id=jobapp.id %}">
+            <form method="POST" action="{% url 'jobapp' job_hash=jobapp.public_id %}">
                 {% csrf_token %}
                 <div class="mb-2">
                     <input type="text" class="form-control form-control-sm" name="comment_text"
@@ -74,8 +74,8 @@ Job Lizard - {{ jobapp.company }}
     <div class="container-fluid job-detail-content">
         <div class="row mb-1 text-align-start">
             <div class="col d-flex align-items-center">
-                <a href="{% url 'edit-job' jobapp.id %}" class="btn btn-success m-3" type="submit">Edit Application</a>
-                <form method="POST" action="{% url 'delete-job' job_id=jobapp.id %}"
+                <a href="{% url 'edit-job' jobapp.public_id %}" class="btn btn-success m-3" type="submit">Edit Application</a>
+                <form method="POST" action="{% url 'delete-job' job_hash=jobapp.public_id %}"
                       onsubmit="return confirm('Are you sure you want to delete this job application? This cannot be undone.');">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger m-3">Delete Application</button>
@@ -158,7 +158,7 @@ Job Lizard - {{ jobapp.company }}
         <div class="row mb-4 text-align-start">
             <div class="col-3 text-start">
                 {{ jobapp.job_status }}
-                <form class="d-flex" method=POST action="{% url 'jobapp' job_id=jobapp.id %}">
+                <form class="d-flex" method=POST action="{% url 'jobapp' job_hash=jobapp.public_id %}">
                     {% csrf_token %}
                     <select class="form-select m-3" aria-label="Status Update" name="job_status_update">
                         <option selected></option>

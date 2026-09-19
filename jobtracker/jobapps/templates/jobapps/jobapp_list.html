@@ -81,7 +81,7 @@ Job Lizard - Job App List
                     </td>
                     <td class="jobapp col text-start">
                         <a class="link-success link-offset-1 link-underline-opacity-50"
-                           href="{% url 'jobapp' job_id=jobapp.id %}">
+                           href="{% url 'jobapp' job_hash=jobapp.public_id %}">
                             {{ jobapp.title }}
                         </a>
                     </td>

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from jobapps.models import JobApp, JobComment
+from jobapps.hashid_utils import encode_id
 
 User = get_user_model()
 
@@ -22,7 +23,7 @@ class JobAppPageHappyPathTests(TestCase):
         )
 
     def test_get_jobapp_page_renders_successfully(self):
-        url = reverse("jobapp", kwargs={"job_id": self.jobapp.id})
+        url = reverse("jobapp", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -40,7 +41,7 @@ class JobAppPageHappyPathTests(TestCase):
             change_dt=timezone.now(),
         )
 
-        url = reverse("jobapp", kwargs={"job_id": self.jobapp.id})
+        url = reverse("jobapp", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.post(url, {
             "job_status_update": "interviewing",
             "comment_text": "Had a great first call",
@@ -49,7 +50,7 @@ class JobAppPageHappyPathTests(TestCase):
 
         # Should redirect back to the same jobapp page
         self.assertRedirects(
-            response, reverse("jobapp", kwargs={"job_id": self.jobapp.id})
+            response, reverse("jobapp", kwargs={"job_hash": self.jobapp.public_id})
         )
 
         self.jobapp.refresh_from_db()
@@ -65,5 +66,9 @@ class JobAppPageHappyPathTests(TestCase):
         )
 
     def test_jobapp_page_returns_redirect_when_not_found(self):
-        response = self.client.get(reverse("jobapp", args=[9999]))  # nonexistent id
+        # 9999 doesn't correspond to a real JobApp, but it still needs to be a
+        # validly-encoded hash so decode_id() succeeds and the view reaches
+        # its "does this id exist" check (rather than short-circuiting earlier
+        # on a decode failure, which would be testing a different code path).
+        response = self.client.get(reverse("jobapp", kwargs={"job_hash": encode_id(9999)}))
         self.assertRedirects(response, reverse("jobapps"))

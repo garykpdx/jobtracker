@@ -35,7 +35,7 @@ class DeleteJobAppTests(TestCase):
 
     def test_delete_removes_jobapp(self):
         """POSTing to the delete URL removes the JobApp and redirects to the list."""
-        url = reverse("delete-job", kwargs={"job_id": self.jobapp.id})
+        url = reverse("delete-job", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.post(url)
 
         self.assertRedirects(response, reverse("jobapps"))
@@ -44,7 +44,7 @@ class DeleteJobAppTests(TestCase):
     def test_delete_requires_login(self):
         """Anonymous users cannot delete a job app."""
         self.client.logout()
-        url = reverse("delete-job", kwargs={"job_id": self.jobapp.id})
+        url = reverse("delete-job", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.post(url)
 
         self.assertNotEqual(response.status_code, 200)
@@ -52,10 +52,10 @@ class DeleteJobAppTests(TestCase):
 
     def test_delete_get_does_not_delete(self):
         """A GET request should not delete the job app (only POST should)."""
-        url = reverse("delete-job", kwargs={"job_id": self.jobapp.id})
+        url = reverse("delete-job", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.get(url)
 
-        self.assertRedirects(response, reverse("jobapp", kwargs={"job_id": self.jobapp.id}))
+        self.assertRedirects(response, reverse("jobapp", kwargs={"job_hash": self.jobapp.public_id}))
         self.assertTrue(JobApp.objects.filter(id=self.jobapp.id).exists())
 
     def test_cannot_delete_other_users_jobapp(self):
@@ -63,7 +63,7 @@ class DeleteJobAppTests(TestCase):
         self.client.logout()
         self.client.login(username="otheruser", password="testpass123")
 
-        url = reverse("delete-job", kwargs={"job_id": self.jobapp.id})
+        url = reverse("delete-job", kwargs={"job_hash": self.jobapp.public_id})
         response = self.client.post(url)
 
         self.assertRedirects(response, reverse("jobapps"))

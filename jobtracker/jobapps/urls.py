@@ -5,8 +5,8 @@ urlpatterns = [
     path('', views.jobapp_list, name="jobapps"),
     path('new-job/', views.new_jobapp, name="new-job"),
     path('search/', views.search_job, name="search"),
-    path('edit/<int:job_id>', views.edit_jobapp, name="edit-job"),
-    path('delete/<int:job_id>/', views.delete_jobapp, name='delete-job'),
+    path('edit/<str:job_hash>', views.edit_jobapp, name="edit-job"),
+    path('delete/<str:job_hash>/', views.delete_jobapp, name='delete-job'),
     path('company-suggestions/', views.company_suggestions, name='company-suggestions'),
-    path("<int:job_id>", views.jobapp_page, name="jobapp"),
+    path("<str:job_hash>", views.jobapp_page, name="jobapp"),
 ]
