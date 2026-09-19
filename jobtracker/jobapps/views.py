@@ -1,5 +1,5 @@
 from datetime import datetime, time, timedelta
-
+import logging
 from django.db.models import Q
 from django.shortcuts import (
     render,
@@ -23,13 +23,7 @@ ALLOWED_TAGS = [
 ]
 ALLOWED_ATTRS = {"a": ["href", "title", "target", "rel"]}
 
-
-# def save(self, *args, **kwargs):
-#     self.description = bleach.clean(
-#         self.description, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS
-#     )
-#     super().save(*args, **kwargs)
-
+logger = logging.getLogger(__name__)
 
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
@@ -57,9 +51,11 @@ def jobapp_page(request, job_id):
     try:
         jobapp = JobApp.objects.filter(user=user).get(id=job_id)
     except JobApp.DoesNotExist:
+        logger.warning("JobApp {} does not exist for user {}".format(job_id, user))
         return redirect("jobapps")
 
     if jobapp.user != user:
+        logger.warning("JobApp {} is not owned by user {}".format(job_id, user))
         return redirect("jobapps")
 
     if request.method == "POST":
@@ -157,6 +153,7 @@ def delete_jobapp(request, job_id):
         return redirect("jobapps")
 
     if jobapp.user != user:
+        logger.warning("JobApp {} is not owned by user {}".format(job_id, user))
         return redirect("jobapps")
 
     if request.method == "POST":

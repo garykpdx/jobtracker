@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
@@ -8,6 +9,7 @@ from django.utils import timezone as django_timezone
 
 from jobapps.models import JobApp
 
+logger = logging.getLogger(__name__)
 
 def homepage(request):
     logged_in = request.user.is_authenticated
@@ -17,7 +19,7 @@ def homepage(request):
     try:
         user_tz = ZoneInfo(str(raw_tz)) if raw_tz else django_timezone.get_default_timezone()
     except Exception as e:
-        print(e)
+        logger.warning("Failed to parse timezone: {}".format(e))
         user_tz = django_timezone.get_default_timezone()
 
     now_local = django_timezone.localtime(django_timezone.now(), timezone=user_tz)
