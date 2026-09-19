@@ -29,11 +29,14 @@ Job Lizard - New Job App
 
 <div class="job-detail-wrapper">
     <img src="{% static 'media/hr_lizard.png' %}" alt="HR Lizard" class="job-detail-logo">
-    {% if jobapps %}
     <div class="container m-2">
         <div class="row p-1">
             <div class="jobapp col-3 text-start">
+                {% if jobapps %}
                 <h2 class="display-6 text-secondary ms-2"><b>Job Applications</b></h2>
+                {% else %}
+                <h2 class="display-6 text-secondary ms-2"><b>No Results for "{{ search_terms }}"</b></h2>
+                {% endif %}
             </div>
             <div class="jobapp col text-start">
                 <form class="d-flex" method=POST action="{% url 'search' %}">
@@ -47,6 +50,7 @@ Job Lizard - New Job App
             </div>
         </div>
 
+        {% if jobapps %}
         <div class="container p-2">
             <table class="table table-light table-striped">
                 <tr>
@@ -100,25 +104,6 @@ Job Lizard - New Job App
                 {% endfor %}
             </table>
         </div>
-        {% else %}
-        <div class="container m-2">
-            <div class="row p-1">
-                <div>
-                    <h2 class="display-6 text-secondary ms-2"><b>No Results for "{{ search_terms }}"</b></h2>
-                </div>
-                <div class="jobapp col text-start">
-                    <form class="d-flex" method=POST action="{% url 'search' %}">
-                        {% csrf_token %}
-                        <input class="form-control me-2" type="search" placeholder="search jobs" aria-label="Search"
-                               name="search_terms">
-                        <button class="btn btn-success" type="submit">
-                            Search
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         {% endif %}
     </div>
 </div>
