@@ -32,11 +32,7 @@ Job Lizard - New Job App
     <div class="container m-2">
         <div class="row p-1">
             <div class="jobapp col-3 text-start">
-                {% if jobapps %}
                 <h2 class="display-6 text-secondary ms-2"><b>Job Applications</b></h2>
-                {% else %}
-                <h2 class="display-6 text-secondary ms-2"><b>No Results for "{{ search_terms }}"</b></h2>
-                {% endif %}
             </div>
             <div class="jobapp col text-start">
                 <form class="d-flex" method=POST action="{% url 'search' %}">
@@ -47,6 +43,9 @@ Job Lizard - New Job App
                         Search
                     </button>
                 </form>
+                {% if not jobapps %}
+                <h4 class="fs-4 text-success mt-2 mb-0">No results for "{{ search_terms }}"</h4>
+                {% endif %}
             </div>
         </div>
 
