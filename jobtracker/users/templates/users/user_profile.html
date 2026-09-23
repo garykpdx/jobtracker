@@ -32,7 +32,7 @@ Job Lizard - User Profile
     <div class="container m-2 text-bg-light p-3 rounded-5">
         <div class="row mb-1 text-align-start">
             <div class="col d-flex align-items-center">
-                <h1 class="text-secondary me-3 mb-0">Profile for {{ request.user.username }}</h1>
+                <h2 class="fs-3 text-secondary ms-2">Profile for {{ request.user.username }}</h2>
                 <a href="{% url 'users:editprofile' %}" class="btn btn-success m-3">Edit Profile</a>
             </div>
         </div>
