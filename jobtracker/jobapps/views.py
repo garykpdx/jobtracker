@@ -1,22 +1,24 @@
-from datetime import datetime, time, timedelta
 import logging
+from datetime import datetime, time, timedelta, UTC
+
+import bleach
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import (
     render,
     redirect,
 )
-from django.http import HttpResponse, JsonResponse
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
+from . import forms
+from .exports import write_jobapps_csv
 from .hashid_utils import decode_id, encode_id
 from .models import (
     JobApp,
     JobComment,
     JOB_STATUS_TYPE,
 )
-from . import forms
-import bleach
 
 ALLOWED_TAGS = [
     "p", "br", "strong", "em", "b", "i", "u", "ul", "ol", "li", "a",
@@ -25,6 +27,7 @@ ALLOWED_TAGS = [
 ALLOWED_ATTRS = {"a": ["href", "title", "target", "rel"]}
 
 logger = logging.getLogger(__name__)
+
 
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
@@ -122,9 +125,9 @@ def company_suggestions(request):
         return JsonResponse({"companies": []})
 
     companies = (JobApp.objects.filter(user=request.user, company__icontains=query)
-                 .order_by("company")
-                 .values_list("company", flat=True)
-                 .distinct()[:4])
+    .order_by("company")
+    .values_list("company", flat=True)
+    .distinct()[:4])
 
     return JsonResponse({"companies": list(companies)})
 
@@ -191,3 +194,15 @@ def search_job(request):
                       {"jobapps": jobapps, "count": count, "search_terms": search_terms})
 
     return render(request, 'jobapps/search_job.html', {})
+
+
+@login_required(login_url="/users/login/")
+def export_jobapps_csv(request):
+    user_tz = getattr(getattr(request.user, "profile", None), "timezone", None) \
+        or timezone.get_default_timezone()
+    date_str = timezone.localtime(timezone.now(), timezone=user_tz).strftime("%Y_%m_%d")
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f'attachment; filename="job_applications_{date_str}.csv"'
+    write_jobapps_csv(response, request.user)
+    return response
