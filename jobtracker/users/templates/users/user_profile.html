@@ -34,6 +34,7 @@ Job Lizard - User Profile
             <div class="col d-flex align-items-center">
                 <h2 class="fs-3 text-secondary ms-2">Profile for {{ request.user.username }}</h2>
                 <a href="{% url 'users:editprofile' %}" class="btn btn-success m-3">Edit Profile</a>
+                <a href="{% url 'export-jobapps' %}" class="btn btn-outline-success m-3">Export Job Applications (CSV)</a>
             </div>
         </div>
 

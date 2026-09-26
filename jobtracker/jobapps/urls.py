@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete/<str:job_hash>/', views.delete_jobapp, name='delete-job'),
     path('company-suggestions/', views.company_suggestions, name='company-suggestions'),
     path("<str:job_hash>", views.jobapp_page, name="jobapp"),
+    path("export/", views.export_jobapps_csv, name="export-jobapps"),
 ]
