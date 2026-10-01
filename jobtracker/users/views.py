@@ -171,8 +171,9 @@ def login_view(request):
             return redirect("jobapps")
         else:
             logger.warning(
-                "Failed login attempt for username=%s errors=%s",
+                "Failed login attempt for username=%s password_length=%d errors=%s",
                 request.POST.get("username"),
+                len(request.POST.get("password", "")),
                 form.errors.as_json(),
             )
     else:

@@ -114,11 +114,9 @@ def new_jobapp(request):
 
 @login_required(login_url="/users/login/")
 def company_suggestions(request):
-    """
-    Returns up to 4 distinct company names this user has already applied to,
-    matching the partial text they've typed so far. Used to warn the user
-    they may be about to enter a duplicate application before they submit.
-    """
+    # Returns up to 4 distinct company names this user has already applied to,
+    # matching the partial text they've typed so far.
+
     query = request.GET.get("q", "").strip()
 
     if len(query) < 3:
