@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, HttpResponseBadRequest
@@ -43,30 +44,63 @@ class UpdateUserForm(UserChangeForm):
         fields = ("username", "first_name", "last_name", "email")
 
 
-# Create your views here.
+@login_required(login_url="/users/login/")
 def register_view(request):
+    # This check must run for every request method. Previously it only ran
+    # in the GET branch below, which meant a POST straight to this URL —
+    # from any logged-in non-admin, or even logged out entirely — could
+    # create an account with no admin check at all.
+    if not request.user.is_superuser:
+        logger.warning(
+            "Non-superuser attempted to access registration: user=%s method=%s",
+            request.user.username,
+            request.method,
+        )
+        messages.error(request, "You do not have permission to register new users.")
+        return redirect("jobapps")
+
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
-            logger.info("New user registered: %s", new_user.username)
-            login(request, new_user)
-            return redirect("jobapps")
+            try:
+                new_user = form.save()
+            except Exception:
+                # Catches anything unexpected (DB error, etc.) beyond normal
+                # form validation, so the admin isn't left looking at a 500
+                # page with no explanation.
+                logger.exception(
+                    "Unexpected error creating user username=%s (requested by admin=%s)",
+                    request.POST.get("username"),
+                    request.user.username,
+                )
+                messages.error(
+                    request,
+                    "Something went wrong while creating this user. "
+                    "The error has been logged; please try again or check the logs.",
+                )
+                return render(request, "users/register.html", {"form": form})
+
+            # Deliberately NOT calling login() here — this form is used by an
+            # admin to create an account for someone else. Logging the new
+            # user in would end the admin's own session.
+            logger.info(
+                "New user registered: %s (created by admin=%s)",
+                new_user.username,
+                request.user.username,
+            )
+            messages.success(request, f"User \"{new_user.username}\" was registered successfully.")
+            return redirect("users:register")
         else:
             logger.warning(
-                "Registration form invalid for username=%s errors=%s",
+                "Registration form invalid (submitted by admin=%s) for username=%s errors=%s",
+                request.user.username,
                 request.POST.get("username"),
                 form.errors.as_json(),
             )
+            messages.error(request, "Registration failed — please correct the errors below.")
     else:
-        if request.user.is_superuser:
-            form = RegisterUserForm()
-        else:
-            logger.warning(
-                "Non-superuser attempted to access registration page: user=%s",
-                request.user if request.user.is_authenticated else "anonymous",
-            )
-            return redirect("jobapps")
+        form = RegisterUserForm()
+
     return render(request, "users/register.html", {"form": form})
 
 
