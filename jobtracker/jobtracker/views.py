@@ -4,10 +4,14 @@ from zoneinfo import ZoneInfo
 
 from django.db.models import Count
 from django.db.models.functions import TruncDate
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils import timezone as django_timezone
+from django.utils import timezone as django_timezone, connection
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_safe
 
 from jobapps.models import JobApp
+from jobtracker.health import check_database
 
 logger = logging.getLogger(__name__)
 
@@ -101,3 +105,19 @@ def homepage(request):
                                           'city_data': city_data,
                                           'weekly_counts': weekly_counts,
                                           'logged_in': logged_in, 'username': username})
+
+
+
+
+
+@never_cache
+@require_safe
+def health(request):
+    db_ok = check_database()
+    return JsonResponse(
+        {
+            "status": "ok" if db_ok else "error",
+            "database": "ok" if db_ok else "unavailable",
+        },
+        status=200 if db_ok else 503,
+    )
