@@ -34,6 +34,7 @@ urlpatterns = [
     path('jobapps/', include('jobapps.urls')),
     path('contractors/', include('contractors.urls')),
     path('users/', include('users.urls')),
+    path('health/', views.health, name="health"),
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
