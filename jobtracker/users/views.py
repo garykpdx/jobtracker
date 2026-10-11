@@ -18,7 +18,7 @@ from django.contrib.auth import (
     update_session_auth_hash,
 )
 from django import forms
-
+from django.utils.http import url_has_allowed_host_and_scheme
 from users.forms import EditProfileForm, ProfileSettingsForm, CustomPasswordChangeForm
 from users.models import UserProfile
 
@@ -199,9 +199,16 @@ def login_view(request):
         if form.is_valid():
             login(request, form.get_user())
             logger.info("User logged in: %s", form.get_user().username)
-            if "next" in request.POST:
-                logger.info("Redirecting to next URL: %s", request.POST.get("next"))
-                return redirect(request.POST.get("next"))
+
+            next_url = request.POST.get("next", "")
+            if next_url and url_has_allowed_host_and_scheme(
+                    url=next_url,
+                    allowed_hosts={request.get_host()},
+                    require_https=request.is_secure(),
+            ):
+                return redirect(next_url)
+            if next_url:
+                logger.warning("Rejected unsafe next URL: %r", next_url)
             return redirect("jobapps")
         else:
             logger.warning(
