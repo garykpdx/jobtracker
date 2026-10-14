@@ -1,43 +1,34 @@
 import logging
-from datetime import datetime, time, timedelta
-from zoneinfo import ZoneInfo
 
 from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils import timezone as django_timezone, connection
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_safe
 
 from jobapps.models import JobApp
+from jobtracker.date_utils import (
+    get_user_tz,
+    last_n_days_range,
+    local_today,
+    recent_weeks,
+    week_range,
+)
 from jobtracker.health import check_database
 
 logger = logging.getLogger(__name__)
+
 
 def homepage(request):
     logged_in = request.user.is_authenticated
     username = request.user.username
 
-    raw_tz = getattr(getattr(request.user, "profile", None), "timezone", None)
-    try:
-        user_tz = ZoneInfo(str(raw_tz)) if raw_tz else django_timezone.get_default_timezone()
-    except Exception as e:
-        logger.warning("Failed to parse timezone: {}".format(e))
-        user_tz = django_timezone.get_default_timezone()
+    user_tz = get_user_tz(request.user)
+    today_local = local_today(user_tz)
 
-    now_local = django_timezone.localtime(django_timezone.now(), timezone=user_tz)
-    today_local = now_local.date()
-    start_date_local = today_local - timedelta(days=30)
-
-    week_start_local = today_local - timedelta(days=(today_local.isoweekday() % 7))
-    week_end_local = week_start_local + timedelta(days=6)
-
-    range_start = datetime.combine(start_date_local, time.min, tzinfo=user_tz)
-    range_end = datetime.combine(today_local, time.max, tzinfo=user_tz)
-
-    week_range_start = datetime.combine(week_start_local, time.min, tzinfo=user_tz)
-    week_range_end = datetime.combine(week_end_local, time.max, tzinfo=user_tz)
+    range_start, range_end = last_n_days_range(user_tz, days=30)
+    week_range_start, week_range_end = week_range(today_local, user_tz)
 
     try:
         jobcount_30_days = (JobApp.objects.filter(user=request.user)
@@ -82,18 +73,12 @@ def homepage(request):
     # using the same Sunday-start week boundaries as jobcount_current_week above.
     try:
         weekly_counts = {}
-        for weeks_ago in range(3, -1, -1):
-            w_start_local = week_start_local - timedelta(weeks=weeks_ago)
-            w_end_local = w_start_local + timedelta(days=6)
-
-            w_range_start = datetime.combine(w_start_local, time.min, tzinfo=user_tz)
-            w_range_end = datetime.combine(w_end_local, time.max, tzinfo=user_tz)
-
+        for w_start, w_end, w_range_start, w_range_end in recent_weeks(user_tz, n=4):
             week_count = (JobApp.objects.filter(user=request.user)
                           .filter(applied_dt__range=(w_range_start, w_range_end))
                           .count())
 
-            label = f"{w_start_local.strftime('%b %d')} - {w_end_local.strftime('%b %d')}"
+            label = f"{w_start.strftime('%b %d')} - {w_end.strftime('%b %d')}"
             weekly_counts[label] = week_count
     except Exception as e:
         print(e)
@@ -105,9 +90,6 @@ def homepage(request):
                                           'city_data': city_data,
                                           'weekly_counts': weekly_counts,
                                           'logged_in': logged_in, 'username': username})
-
-
-
 
 
 @never_cache
