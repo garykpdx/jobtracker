@@ -37,6 +37,11 @@ class JobApp(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     created_dt = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "applied_dt"], name="jobapp_user_applied_idx"),
+        ]
+
     def __str__(self):
         return f"{self.title}\t{self.company}"
 
