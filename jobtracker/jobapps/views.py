@@ -1,5 +1,4 @@
 import logging
-from datetime import datetime, time, timedelta, UTC
 
 import bleach
 from django.contrib.auth.decorators import login_required
@@ -10,6 +9,8 @@ from django.shortcuts import (
     redirect,
 )
 from django.utils import timezone
+
+from jobtracker.date_utils import get_user_tz, last_n_days_range, local_today
 
 from . import forms
 from .exports import write_jobapps_csv
@@ -32,15 +33,8 @@ logger = logging.getLogger(__name__)
 @login_required(login_url="/users/login/")
 def jobapp_list(request):
     user = request.user
-    user_tz = getattr(getattr(user, "profile", None), "timezone", None) \
-              or timezone.get_default_timezone()
-
-    now_local = timezone.localtime(timezone.now(), timezone=user_tz)
-    today_local = now_local.date()
-    start_date_local = today_local - timedelta(days=30)
-
-    range_start = datetime.combine(start_date_local, time.min, tzinfo=user_tz)
-    range_end = datetime.combine(today_local, time.max, tzinfo=user_tz)
+    user_tz = get_user_tz(user)
+    range_start, range_end = last_n_days_range(user_tz, days=30)
 
     jobapps = (JobApp.objects.filter(user=user)
                .filter(applied_dt__range=(range_start, range_end))
@@ -196,9 +190,8 @@ def search_job(request):
 
 @login_required(login_url="/users/login/")
 def export_jobapps_csv(request):
-    user_tz = getattr(getattr(request.user, "profile", None), "timezone", None) \
-        or timezone.get_default_timezone()
-    date_str = timezone.localtime(timezone.now(), timezone=user_tz).strftime("%Y_%m_%d")
+    user_tz = get_user_tz(request.user)
+    date_str = local_today(user_tz).strftime("%Y_%m_%d")
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = f'attachment; filename="job_applications_{date_str}.csv"'
